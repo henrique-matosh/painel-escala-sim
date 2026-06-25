@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aba de Ativação — Documento Oficial</title>
+<style>
+:root{--fg:#1a2230;--muted:#5b6677;--line:#e3e8ef;--bg:#fff;--surface:#f7f9fc;--accent:#0f766e;--accent2:#b45309}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--surface);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;background:var(--bg);padding:22px 18px 64px;min-height:100vh}
+h1{font-size:1.55rem;line-height:1.2;margin:.2em 0 .5em;letter-spacing:-.01em}
+h2{font-size:1.25rem;margin:1.7em 0 .5em;padding-top:.6em;border-top:1px solid var(--line)}
+h3{font-size:1.06rem;margin:1.3em 0 .35em;color:#0b1220}
+h2:first-of-type{border-top:none}
+p,li{font-size:1rem}
+a{color:var(--accent);text-decoration:none}
+a:active{opacity:.6}
+strong{color:#0b1220}
+ul,ol{padding-left:1.2em;margin:.4em 0}
+li{margin:.22em 0}
+blockquote{margin:.9em 0;padding:.6em .9em;background:var(--surface);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;color:var(--muted)}
+blockquote p{margin:.3em 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--surface);padding:.1em .35em;border-radius:5px}
+hr{border:none;border-top:1px solid var(--line);margin:1.6em 0}
+table{width:100%;border-collapse:collapse;margin:.8em 0;font-size:.9rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--surface);font-weight:700}
+em{color:var(--muted)}
+.tag{display:inline-block}
+</style></head>
+<body><div class="wrap">
+<h1>Aba de Ativação — Documento Oficial</h1>
+<blockquote>
+<p>Este é o documento para LER e APROVAR. Mostra como a aba de Ativação funciona: o painel inteiro (o topo, o funil, as métricas), depois a tela de diagnóstico, depois cada métrica uma a uma — com a régua de cor de cada uma.</p>
+<p><strong>Termos em inglês têm a tradução do lado.</strong> A aba responde uma pergunta só: <strong>"quantos clientes novos chegam ao primeiro valor — e rápido?"</strong></p>
+</blockquote>
+<hr />
+<h2>1. O Painel (MACRO — como a aba funciona)</h2>
+<h3>A pergunta que a aba responde</h3>
+<p>Cliente entrou: ele <strong>chegou ao primeiro valor</strong> (gerou e exportou conteúdo de verdade) <strong>dentro de 7 dias</strong>? A aba inteira gira em torno disso.</p>
+<h3>A North Star — a métrica que manda</h3>
+<p><em>(North Star, PT: a métrica-norte que guia a aba toda — todas as outras existem pra mover ela.)</em></p>
+<p>A North Star da Ativação é a <strong>Taxa de 1º Impacto em 7 dias (CR6)</strong>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>O que mede</strong></td>
+<td>% dos cadastros que fizeram a <strong>1ª exportação de carrossel</strong> (o primeiro valor real) em <strong>até 7 dias</strong> do cadastro.</td>
+</tr>
+<tr>
+<td><strong>Janela</strong></td>
+<td><strong>fixa em 7 dias</strong> (a âncora da aba — não muda).</td>
+</tr>
+<tr>
+<td><strong>Faróis</strong></td>
+<td>🟢 <strong>≥90%</strong> · 🟡 <strong>80–89%</strong> · 🔴 <strong>&lt;80%</strong></td>
+</tr>
+<tr>
+<td><strong>De onde vem o 90%</strong></td>
+<td>da referência de mercado do Jacco (<em>Revenue Architecture</em>): produto com preço de até US$1k/ano deve ter no mínimo 90% de 1º impacto. O arOS (~US$720/ano) cai nessa faixa. A meta da aba <strong>deriva</strong> dessa referência — não é número chutado.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>A âncora dos 7 dias (vale pra aba toda):</strong> até 7 dias = <strong>Ativação</strong>. Mais de 7 dias = <strong>Retenção</strong> (outra aba). Por isso tudo que mede "cancelou/realizou valor" depois de 7 dias saiu daqui pra Retenção.</p>
+</blockquote>
+<h3>O topo do painel</h3>
+<p>O topo é <strong>1 card só</strong> — o CR6, dominante. (Não são 3 cards: o ICP saiu pra fora e o TAC desceu pro funil — ver abaixo.)</p>
+<p>Dentro do card do CR6:
+- O <strong>número grande</strong> com o farol (🟢/🟡/🔴), a barra até a meta e a <strong>tendência</strong> (sobe/desce vs. período anterior — o aviso antecipado).
+- <strong>2 selos de integridade ao lado do número, PRA FORA do farol de desempenho</strong> (discretos, sempre aparecem, em qualquer cor):
+  - <strong>GHOST-R</strong> — "o número é real?" (cadastro fantasma, gente que entrou e sumiu).
+  - <strong>OC-Δt6</strong> — "cancelou cedo demais?" (quem cancelou em ≤7 dias).
+  - Esses selos <strong>não competem</strong> com a cor do CR6 — <strong>qualificam</strong> ela. Pode dar <strong>CR6 🟢 e um selo 🔴 ao mesmo tempo</strong> (são eixos diferentes: desempenho ≠ integridade).</p>
+<p>Abaixo do número, <strong>3 indicadores</strong> que mudam conforme o estado do CR6 — sempre respondendo "o que olhar agora":</p>
+<table>
+<thead>
+<tr>
+<th>Estado do CR6</th>
+<th>Os 3 que sobem</th>
+<th>Pra responder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔴 / 🟡</td>
+<td>as <strong>3 alavancas mais travadas</strong> (entre Setup-D7 · TTV · OCR-D14 · OUR)</td>
+<td>"o que destravar agora?"</td>
+</tr>
+<tr>
+<td>🟢</td>
+<td>as <strong>2 alavancas de maior folga + GHOST-R</strong></td>
+<td>"o que escalar + o que vigiar?"</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>O <strong>OC-Δt6</strong> corre <strong>sempre ao lado do CR6</strong> como selo fixo — em qualquer cor — e <strong>nunca</strong> disputa esses 3 indicadores. No verde, o 3º slot é do <strong>GHOST-R</strong>.</p>
+</blockquote>
+<h3>O funil</h3>
+<p>O caminho do cliente em degraus: <strong>Configuração Concluída</strong> → 1ª entrega → uso repetido → consumo.</p>
+<ul>
+<li>O degrau <strong>"Configuração Concluída"</strong> é onde mora o antigo <strong>TAC</strong> ("terminou o setup"). Ele continua medido — só <strong>desceu</strong> do topo pro funil, porque é pré-condição do CR6, não o resultado.</li>
+<li>A leitura de setup que <strong>sobe como alavanca</strong> no card do CR6 é o <strong>Setup-D7</strong> (% que conclui a config em ≤7d), não o TAC.</li>
+</ul>
+<h3>As 5 métricas de meio</h3>
+<p>São as métricas que <strong>sustentam</strong> o CR6:</p>
+<ul>
+<li><strong>4 alavancas</strong> <em>(leading, PT: puxam a causa — dá pra agir nelas pra mover o CR6)</em>: <strong>Setup-D7 · TTV · OCR-D14 · OUR</strong>.</li>
+<li><strong>+ 1 guardrail</strong> <em>(guardrail, PT: trava de integridade — não é desempenho, é "o número é confiável?")</em>: <strong>GHOST-R</strong> — com um <strong>suplente condicional</strong>, o <strong>MSG-REGEN</strong> <em>(taxa de regeneração de mensagem)</em>: <strong>1-OU-outro</strong>, nunca os dois. O MSG-REGEN entra <strong>no lugar</strong> do GHOST-R quando este estiver indisponível — <strong>não</strong> é uma 6ª métrica de meio.</li>
+</ul>
+<p>Fora dessas 5, ao lado do CR6, corre um <strong>6º selo de integridade</strong> — o <strong>OC-Δt6</strong> ("cancelou ≤7d"). Ele <strong>não</strong> é uma das 5 métricas de meio nem disputa os 3 indicadores: é um selo fixo, sempre visível.</p>
+<blockquote>
+<p>Resumindo a contagem: <strong>5 métricas de meio</strong> = 4 alavancas + GHOST-R (esse fica <strong>dentro</strong> do grid). <strong>GHOST-R e OC-Δt6</strong> são os <strong>2 selos de integridade</strong> ao lado do CR6 — GHOST-R <strong>dentro e fora</strong> (membro das 5 + selo), OC-Δt6 <strong>só fora</strong> (só selo).</p>
+</blockquote>
+<h3>O ICP — separado, fora do CR6</h3>
+<p><em>(ICP, PT: o perfil de cliente ideal — a lente "pra quem".)</em></p>
+<p>O <strong>ICP saiu de dentro do card do CR6</strong> e virou um indicador <strong>separado, à parte</strong>. Responde <strong>"o 1º impacto está acontecendo com o público certo?"</strong>. Não é North Star nem alavanca; não tem árvore própria agora; é construído depois. Ao clicar, abre um corte <strong>só de público</strong> (CR6 por segmento + GHOST-R por segmento).</p>
+<h3>O menu de período</h3>
+<p>A aba tem um seletor de janela <strong>7 / 14 / 30 dias</strong>:
+- <strong>CR6 e Setup-D7 NÃO mudam</strong> — são <strong>fixos em 7 dias</strong> (a âncora).
+- Só o <strong>OCR-D14</strong> e as visões do painel leem o período. Quando o período muda, o rótulo do OCR no painel vira "OCR-Δt6" (mas o nome de cadastro continua "OCR-D14").</p>
+<h3>A regra do semáforo (vale pra todas)</h3>
+<blockquote>
+<p>A <strong>referência de mercado</strong> calibra os <strong>gatilhos</strong> (os cortes 🟢🟡🔴). A <strong>meta</strong> da métrica <strong>deriva</strong> dessa referência — nunca um número arbitrário. Quando não há referência de mercado, o corte é <strong>calibração interna explícita</strong> (declarada como tal, sem creditar autor por um número que ele não publicou).</p>
+</blockquote>
+<hr />
+<h2>2. O Diagnosticar (MICRO — a árvore)</h2>
+<p>Cada métrica do card é uma <strong>porta</strong>: clicar em "Diagnosticar" abre o caminho da causa. A lógica é <strong>3 estados = 3 tratamentos diferentes</strong> — o mesmo CR6 pede ação diferente conforme a cor.</p>
+<h3>🔴 CONSERTA (CR6 &lt; 80%) — "onde quebrou e por quê?"</h3>
+<p>Estado crítico. A árvore <strong>desce na causa-raiz</strong>, degrau por degrau: Setup-D7 → TTV → OCR-D14 → OUR. Onde achar o degrau quebrado, roda os "5 porquês" até a ação concreta (com responsável).</p>
+<h3>🟡 EMPURRA (CR6 80–89%) — "qual alavanca destravar agora pra não quebrar?"</h3>
+<p>Zona de oportunidade. Aqui a árvore <strong>NÃO parte do problema</strong> — parte da <strong>alavanca de maior folga × maior impacto</strong> e empurra ela <strong>antes</strong> de virar vermelho. É ação proativa, não conserto. (É o "ganhar jogo barato".)</p>
+<h3>🟢 ESCALA (CR6 ≥ 90%) — "o que escalar + o que vigiar?"</h3>
+<p>Dobra/replica o que está convertendo (não mexe no que funciona) <strong>e vigia a integridade</strong>: GHOST-R e OC-Δt6 ao lado do CR6 — no verde é <strong>quando mais importam</strong> (o número alto pode estar inflado por fantasma, ou o cliente pode estar cancelando cedo mesmo com 1º impacto alto).</p>
+<h3>Quando TUDO está vermelho (multi-vermelho) — achar a causa-raiz certa</h3>
+<p>Quando várias alavancas estão 🔴 ao mesmo tempo, a tentação é atacar a de <strong>maior buraco</strong>. Errado — ela pode ser <strong>sintoma</strong> de outra.</p>
+<blockquote>
+<p><strong>A causa-raiz é o degrau 🔴 mais a MONTANTE</strong> (o mais "lá embaixo" do funil) <strong>cujos pré-requisitos já estão 🟢</strong> — não o maior buraco. O tamanho do buraco só desempata <strong>dentro</strong> de uma mesma camada.</p>
+</blockquote>
+<p>Exemplo: se o <strong>Setup-D7</strong> está 🔴, é quase garantido que TTV e OCR-D14 também fiquem 🔴 — eles estão vermelhos <strong>por fome, não por defeito</strong>. Consertar o TTV não resolve nada; a raiz é o Setup-D7 lá embaixo. A ordem de montante do funil:</p>
+<pre><code>Setup-D7  →  TTV  →  OCR-D14  →  OUR        (GHOST-R e OC-Δt6 correm por fora, em paralelo)
+(config)     (velocidade)  (repetição)  (consumo)
+montante ───────────────────────────────► jusante
+</code></pre>
+<p>Antes de tudo: se o <strong>GHOST-R</strong> estiver alto, o número pode ser <strong>base fantasma</strong>, não funil quebrado — resolve a integridade primeiro. Se o <strong>OC-Δt6</strong> estiver alto, parte da base <strong>cancela ≤7d</strong> — casar com o canal de aquisição.</p>
+<hr />
+<h2>3. As Métricas (MICRO — uma a uma)</h2>
+<blockquote>
+<p>Régua de cor: 🟢 bom · 🟡 alerta · 🔴 ruim. "Janela" = o período que a métrica olha. "Papel": <strong>leading</strong> (alavanca, dá pra agir), <strong>lagging</strong> (efeito, só se lê), <strong>guardrail</strong> (trava de integridade).</p>
+</blockquote>
+<hr />
+<h3>Taxa de 1º Impacto em 7 dias — CR6</h3>
+<p><em>(CR6 = Conversion Rate 6, a taxa de 1º impacto do modelo Bowtie do Jacco.)</em></p>
+<ul>
+<li><strong>O que é:</strong> dos que se cadastraram, quantos <strong>exportaram o 1º carrossel</strong> (valor real) em ≤7 dias.</li>
+<li><strong>Por que importa:</strong> é a <strong>North Star</strong> — responde "o cliente comprou e teve impacto?" sem rodeio.</li>
+<li><strong>Papel:</strong> North Star (o resultado da aba — nunca alavanca de si mesma).</li>
+<li><strong>Fórmula:</strong> (cadastros com 1ª exportação em ≤7d) ÷ (cadastros do período).</li>
+<li><strong>Régua:</strong> 🟢 ≥90% · 🟡 80–89% · 🔴 &lt;80%</li>
+<li><strong>Janela:</strong> <strong>fixa em 7 dias.</strong></li>
+</ul>
+<hr />
+<h3>Taxa de Configuração em 7 dias — Setup-D7</h3>
+<ul>
+<li><strong>O que é:</strong> quantos concluíram a <strong>1ª ação-chave</strong> (login + config mínima, ex. conectar o Instagram) em ≤7 dias.</li>
+<li><strong>Por que importa:</strong> é o degrau <strong>mais baixo</strong> do funil. Se nem isso, o problema é acesso, não produto.</li>
+<li><strong>Papel:</strong> <strong>alavanca</strong> <em>(leading — dá pra agir nela)</em>.</li>
+<li><strong>Fórmula:</strong> (cadastros com 1ª ação-chave em ≤7d) ÷ (cadastros do período).</li>
+<li><strong>Régua:</strong> 🟢 ≥85% · 🟡 70–84% · 🔴 &lt;70%</li>
+<li><strong>Janela:</strong> <strong>fixa em 7 dias.</strong></li>
+</ul>
+<hr />
+<h3>Tempo até o Valor — TTV (Δt6)</h3>
+<p><em>(TTV = Time-to-Value, PT: tempo até o cliente ter valor.)</em></p>
+<ul>
+<li><strong>O que é:</strong> o <strong>tempo (mediana)</strong> entre o cadastro e a <strong>1ª entrega gerada</strong>.</li>
+<li><strong>Por que importa:</strong> quanto mais demora pra chegar ao valor, maior a chance de cancelar antes.</li>
+<li><strong>Papel:</strong> <strong>alavanca</strong> <em>(leading)</em>. <strong>Menor é melhor.</strong></li>
+<li><strong>Fórmula:</strong> mediana de (hora da 1ª entrega − hora do cadastro), em horas.</li>
+<li><strong>Régua:</strong> 🟢 ≤24h · 🟡 24–48h · 🔴 &gt;48h</li>
+<li><strong>Janela:</strong> 7 dias.</li>
+</ul>
+<hr />
+<h3>Taxa de Confiança de Saída — OCR-D14</h3>
+<p><em>(OCR = Output Confidence Rate, PT: taxa de confiança no que o produto entrega.)</em></p>
+<ul>
+<li><strong>O que é:</strong> quantos geraram <strong>≥3 entregas</strong> na janela (uso repetido — não foi acidente).</li>
+<li><strong>Por que importa:</strong> confirma que a 1ª entrega <strong>virou hábito</strong>, não foi sorte.</li>
+<li><strong>Papel:</strong> <strong>alavanca</strong> <em>(leading)</em> · <strong>janela configurável</strong> (a única que lê o menu de período; default 7 dias).</li>
+<li><strong>Fórmula:</strong> (cadastros com ≥3 entregas na janela) ÷ (ativos na janela).</li>
+<li><strong>Régua:</strong> 🟢 ≥50% · 🟡 30–49% · 🔴 &lt;30% — <strong>[SEM-FONTE · recalibrar 7d — gatilho vem do validador]</strong> <em>(os cortes eram da janela de 14 dias; na de 7 dias, o default, ainda não têm fonte — a forma da régua fica, o valor a 7 dias vem do validador).</em></li>
+<li><strong>Janela:</strong> configurável (default 7 dias; 7/14/30).</li>
+</ul>
+<hr />
+<h3>Taxa de Saída Usada — OUR</h3>
+<p><em>(OUR = Output Used Rate, PT: taxa do que foi de fato usado.)</em></p>
+<ul>
+<li><strong>O que é:</strong> quantas saídas geradas foram <strong>copiadas ou compartilhadas</strong> — ou seja, <strong>consumidas</strong>, não só geradas.</li>
+<li><strong>Por que importa:</strong> é o único KPI que mede <strong>consumo</strong> do valor. Gerar ≠ usar.</li>
+<li><strong>Papel:</strong> <strong>alavanca</strong> <em>(leading)</em>.</li>
+<li><strong>Fórmula:</strong> (copiou + compartilhou) ÷ total de mensagens.</li>
+<li><strong>Régua:</strong> 🟢 ≥50% · 🟡 30–49% · 🔴 &lt;30%</li>
+<li><strong>Janela:</strong> 7 dias.</li>
+</ul>
+<hr />
+<h3>Taxa de Cadastros-Fantasma — GHOST-R  ·  <strong>dentro E fora</strong></h3>
+<p><em>(GHOST-R = Ghost Rate, PT: taxa de sumiço.)</em></p>
+<ul>
+<li><strong>O que é:</strong> % de cadastros que <strong>nunca logaram</strong> — o selo "o número é real?".</li>
+<li><strong>Por que importa:</strong> vigia se o CR6 está <strong>inflado</strong> por gente que entrou e sumiu sem usar (anti-truque de métrica).</li>
+<li><strong>Papel:</strong> <strong>guardrail</strong> <em>(trava de integridade)</em> · <strong>contra-métrica externa do CR6</strong>. <strong>Menor é melhor.</strong></li>
+<li><strong>Onde aparece:</strong> <strong>dentro</strong> das 5 métricas de meio (é a guardrail do grid) <strong>E fora</strong>, como selo fixo ao lado do CR6. Tem <strong>gatilho e ícone próprios</strong> — pode acender 🔴 com o CR6 🟢 (eixos independentes). É <strong>uma só</strong> (não se clona por alavanca).</li>
+<li><strong>Fórmula:</strong> (cadastros sem nenhum login) ÷ (total de cadastros).</li>
+<li><strong>Régua:</strong> 🟢 ≤30% · 🟡 &gt;30–50% · 🔴 &gt;50% <em>(calibração interna)</em> — fronteira estrita no 30% (≤30 cai no verde; só acima de 30% entra no amarelo).</li>
+<li><strong>Suplente condicional:</strong> o <strong>GHOST-R</strong> é o guardrail de integridade. Quando ele estiver <strong>indisponível</strong>, entra no lugar dele o <strong>MSG-REGEN — Taxa de Regeneração de Mensagem</strong> <em>(message regeneration rate, PT: % de saídas que o cliente mandou refazer porque a 1ª não serviu)</em>. É <strong>1-OU-outro</strong>, nunca os dois juntos: o MSG-REGEN <strong>não</strong> é uma 6ª métrica de meio — ele <strong>substitui</strong> o GHOST-R como guardrail só quando o GHOST-R não puder ser medido.</li>
+<li><strong>Janela:</strong> período.</li>
+</ul>
+<hr />
+<h3>Taxa de Regeneração de Mensagem — MSG-REGEN  ·  <strong>suplente condicional</strong></h3>
+<p><em>(message regeneration rate, PT: taxa de regeneração de mensagem — % de saídas que o cliente mandou refazer porque a 1ª não serviu.)</em></p>
+<blockquote>
+<p><strong>Suplente condicional — entra no lugar do GHOST-R quando ele está indisponível.</strong> É <strong>1-OU-outro</strong>, nunca os dois juntos: o MSG-REGEN <strong>não</strong> é uma 6ª métrica de meio — substitui o GHOST-R como guardrail só quando o GHOST-R não puder ser medido.</p>
+</blockquote>
+<ul>
+<li><strong>O que é:</strong> % das saídas geradas que o cliente <strong>mandou refazer</strong> (regenerar) porque a 1ª não serviu.</li>
+<li><strong>Por que importa:</strong> regeneração alta revela <strong>esforço escondido</strong> — o cliente chega ao output, mas com atrito (a saída não resolveu de primeira). Vigia a qualidade do que é entregue.</li>
+<li><strong>Papel:</strong> <strong>guardrail</strong> <em>(trava de integridade · suplente do GHOST-R)</em>. <strong>Menor é melhor.</strong></li>
+<li><strong>Fórmula:</strong> (saídas regeneradas) ÷ (total de mensagens) — a mesma natureza de razão, expressa em %.</li>
+<li><strong>Régua:</strong> 🟢 ≤20% · 🟡 20–35% · 🔴 &gt;35% <em>(calibração interna — inspirada no conceito de esforço escondido; não é benchmark de mercado).</em></li>
+<li><strong>Janela:</strong> período.</li>
+</ul>
+<hr />
+<h3>Taxa de Cancelamento em ≤7 dias — OC-Δt6  ·  <strong>só-fora</strong></h3>
+<p><em>(early-churn, PT: cancelamento precoce — o cliente que sai logo na 1ª semana.)</em></p>
+<ul>
+<li><strong>O que é:</strong> % de assinaturas que <strong>cancelaram em ≤7 dias</strong> (saiu dentro da janela de ativação).</li>
+<li><strong>Por que importa:</strong> o CR6 pode estar alto <strong>e</strong> o cliente cancelar logo — a ativação não segurou. Vigia isso.</li>
+<li><strong>Papel:</strong> <strong>guardrail VISUAL</strong> <em>(trava de integridade · early-churn)</em>. <strong>Menor é melhor.</strong></li>
+<li><strong>Onde aparece:</strong> <strong>só fora</strong> — selo fixo ao lado do CR6, em qualquer cor. <strong>Não</strong> entra nas 5 métricas de meio, <strong>não</strong> disputa os 3 indicadores.</li>
+<li><strong>Importante:</strong> <strong>NÃO é "1 − CR6"</strong> — são eventos e janelas diferentes (atingir 1º impacto ≤7d ≠ cancelar ≤7d). É selo visual, não conta. Cancelamento de 8–30d <strong>não</strong> entra aqui — é Retenção. E é <strong>distinto do GHOST-R</strong> (fantasma sem 1ª entrega ≠ cancelou).</li>
+<li><strong>Fórmula:</strong> (cancelamentos com idade da assinatura ≤7d) ÷ (assinaturas elegíveis na janela). <strong>Não</strong> definir como <code>1 − CR6</code>.</li>
+<li><strong>Régua:</strong> 🟢 / 🟡 / 🔴 — <strong>(a calibrar — vem do validador)</strong></li>
+<li><strong>Janela:</strong> <strong>fixa em 7 dias.</strong></li>
+</ul>
+<hr />
+<h2>4. Como o painel decide o estado (as regras de funcionamento)</h2>
+<blockquote>
+<p>Estas três regras definem <strong>COMO</strong> o painel acende cada cor e ordena o que mostrar. Não são detalhe técnico solto — são as regras de operação do painel. Sem elas, o leitor não sabe por que o card só muda depois de 2 leituras nem por que um cohort pequeno não conclui causa.</p>
+</blockquote>
+<h3>Anti-flapping — o card não pode "piscar" (histerese)</h3>
+<p>O CR6 <strong>só muda de estado</strong> (🔴↔🟡↔🟢) quando uma de duas condições bate:
+- <strong>2 refreshes consecutivos</strong> do outro lado do limiar (uma leitura solta não muda a cor), <strong>OU</strong>
+- cruzou o limiar com folga de <strong>banda morta ±3pp</strong> (passou bem do corte, não raspou).</p>
+<p>Cada métrica herda essa trava, com a banda na unidade dela: <strong>CR6 / GHOST-R / MSG-REGEN ±3pp · TTV ±4h</strong>. É o que evita o card oscilar de cor por ruído de leitura.</p>
+<h3>Gate de volume — sem amostra, não conclui causa (por natureza da métrica)</h3>
+<p>Antes de qualquer diagnóstico, a leitura tem que ter <strong>volume mínimo</strong> — e o mínimo depende da <strong>natureza</strong> da métrica:</p>
+<table>
+<thead>
+<tr>
+<th>Natureza</th>
+<th>Métricas</th>
+<th>Mínimo</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Proporção</strong> (%)</td>
+<td>CR6 · Setup-D7 · OCR-D14 · OUR · GHOST-R · OC-Δt6</td>
+<td><strong>n ≥ 100</strong></td>
+<td>Cochran (amostragem de proporção). Cohort pequeno → correção de população finita.</td>
+</tr>
+<tr>
+<td><strong>Mediana</strong> (TTV)</td>
+<td>TTV</td>
+<td><strong>n ≥ 200 leituras</strong></td>
+<td>mediana precisa de cauda — não é Cochran; precisa do dobro pra o p50 estabilizar.</td>
+</tr>
+<tr>
+<td><strong>Razão</strong> (MSG-REGEN)</td>
+<td>MSG-REGEN</td>
+<td><strong>n ≥ 100</strong></td>
+<td>expressa em %, trata como proporção.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Regra dura:</strong> leitura que <strong>não passa</strong> o gate da sua natureza <strong>NÃO conclui causa</strong> — o painel para e pede "agregar mais cadastros / aguardar" em vez de cravar um diagnóstico em cima de pouco dado. Ex.: <strong>n &lt; 100</strong> num cohort de proporção não conclui; <strong>n &lt; 200</strong> na mediana do TTV não conclui.</p>
+</blockquote>
+<h3>Ranking — qual alavanca o card destaca (distância normalizada ao limiar)</h3>
+<p>As alavancas que sobem ao card são ordenadas por <strong>distância normalizada ao limiar</strong> (chamada <code>g</code> — o quão longe a métrica está do corte que a deixaria saudável, padronizado pra dar pra comparar métricas de unidades diferentes):
+- <strong>🔴 / 🟡:</strong> sobem as <strong>3 alavancas mais travadas</strong> (maior <code>g</code>) — "o que destravar primeiro".
+- <strong>🟢:</strong> sobem as <strong>2 de maior folga + o GHOST-R</strong> — "o que escalar + o que vigiar".</p>
+<p>No <strong>multi-vermelho</strong> (várias alavancas 🔴 ao mesmo tempo), o <code>g</code> <strong>não</strong> decide sozinho: a causa-raiz é o degrau 🔴 <strong>mais a montante cujos pré-requisitos já estão 🟢</strong> — o <code>g</code> só <strong>desempata dentro de uma mesma camada do funil</strong>. O <strong>OC-Δt6</strong> corre sempre ao lado do CR6 (qualquer cor) e <strong>nunca disputa</strong> os 3 slots — é selo, não alavanca.</p>
+<hr />
+<blockquote>
+<p><strong>Resumo da árvore por estado:</strong> 🔴 conserta a causa-raiz (degrau mais a montante) · 🟡 empurra a alavanca de maior folga antes de quebrar · 🟢 escala o que converte e vigia GHOST-R + OC-Δt6. O ICP é peça separada (lente "pra quem"), fora do CR6.</p>
+</blockquote>
+</div></body></html>
