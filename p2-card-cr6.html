@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>P2 · Card CR6 — Visão (1 link · controle ao vivo)</title>
+<!--
+  PROTÓTIPO DESCARTÁVEL · P2 (Card CR6) — partiu de /tmp/sgs-intention/prototipo-cr6-dashboard.html (referência que o CEO curtiu).
+  1 LINK SÓ. Barra de CONTROLE flutuante embaixo (dock): Opção A/B/C · Estado OK/Aguardando/Amostra peq. · Semáforo verde/amarelo/vermelho.
+  Tudo via JS no MESMO HTML (data-attr/classe) — sem recarregar, sem abrir outro arquivo.
+  ZERO texto explicativo dentro do card. Clique morto no card (só o dock clica). Sem tooltip. Cor só com régua. Desktop.
+-->
+<style>
+:root{
+  --bg:#FFFFFF; --bg-base:#F6F6F6; --bg-elevated:#F0F0F0; --bg-surface:#FFFFFF;
+  --border:#E8E8E8; --border-subtle:#EFEFEF; --border-hover:#D4D4D8;
+  --fg:#18181B; --fg-body:#3F3F46; --fg-muted:#71717A; --fg-subtle:#A1A1AA;
+  --surface-2:#F4F4F6; --overlay-sm:rgba(0,0,0,.05);
+  --mod-ati:#0E7490; --mod-ati-bg:rgba(14,116,144,.11); --slate:#64748B; --soon:#2563EB; --soon-bg:rgba(37,99,235,.12);
+  --accent:#3A6BC4;
+  --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --green:#1E9E54; --green-bg:rgba(30,158,84,.10);
+  --yellow:#9A7415; --yellow-bg:rgba(154,116,21,.11);
+  --red:#C8342F; --red-bg:rgba(200,52,47,.09);
+}
+[data-theme="dark"]{
+  --bg:#0A0A0B; --bg-base:#101012; --bg-elevated:#161618; --bg-surface:#1C1C1C;
+  --border:#2E2E2E; --border-subtle:#252525; --border-hover:#4B4B52;
+  --fg:#F2F2F4; --fg-body:#D4D4D8; --fg-muted:#9A9AA3; --fg-subtle:#6A6A73;
+  --surface-2:#1D1D20; --overlay-sm:rgba(255,255,255,.07);
+  --mod-ati:#06B6D4; --mod-ati-bg:rgba(6,182,212,.14); --slate:#94A3B8; --soon:#60A5FA; --soon-bg:rgba(96,165,250,.16);
+  --accent:#5B8DEF;
+  --green:#3FBE6E; --green-bg:rgba(63,190,110,.13);
+  --yellow:#E0B341; --yellow-bg:rgba(224,179,65,.13);
+  --red:#EF5350; --red-bg:rgba(239,83,80,.12);
+}
+*{box-sizing:border-box} html,body{margin:0}
+body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:14px;
+  line-height:1.5; -webkit-font-smoothing:antialiased; padding-bottom:118px}
+
+.topbar{position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; background:var(--bg); border-bottom:1px solid var(--border)}
+.topbar .bc{font-size:11px; color:var(--fg-subtle); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.aparencia{display:inline-flex; align-items:center; gap:4px; background:var(--surface-2); border-radius:99px; padding:3px; flex:none}
+.aparencia button{appearance:none; border:0; background:transparent; cursor:pointer; color:var(--fg-muted); font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:99px}
+.aparencia button[aria-pressed="true"]{background:var(--bg); color:var(--fg); box-shadow:0 1px 2px rgba(0,0,0,.12)}
+
+.wrap{max-width:760px; margin:0 auto; padding:14px}
+.tabhdr{font-size:20px; font-weight:700; color:var(--fg); margin:6px 0 12px}
+.subnav{display:flex; gap:6px; margin-bottom:14px; border-bottom:1px solid var(--border)}
+.subnav button{appearance:none; border:0; background:transparent; cursor:pointer; padding:8px 12px; font-size:13px; color:var(--fg-muted); border-bottom:2px solid transparent; margin-bottom:-1px}
+.subnav button[aria-selected="true"]{color:var(--mod-ati); border-bottom-color:var(--mod-ati); font-weight:600}
+
+.stack{display:flex; flex-direction:column; gap:14px}
+
+/* ── HERO — UMA superfície só (sem caixas) ── */
+.hero{position:relative; border-radius:13px; border:1px solid var(--border); border-left:3px solid var(--mod-ati); background:var(--bg-surface); padding:20px 22px}
+.head{display:flex; align-items:center; gap:11px}
+.modtag{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--mod-ati); background:var(--mod-ati-bg); border-radius:99px; padding:3px 10px}
+.id{display:flex; flex-direction:column; min-width:0}
+.id .nm{font-size:16px; font-weight:800; letter-spacing:-.01em; color:var(--fg); line-height:1.15}
+.id .full{font-size:11.5px; color:var(--fg-muted); margin-top:2px}
+/* GHOST-R selo de integridade (topo direita) */
+.ghost{display:inline-flex; margin-left:auto; align-items:center; gap:6px; font-size:11px; font-weight:700; border-radius:99px; padding:5px 11px; border:1px solid color-mix(in srgb,var(--green) 36%,transparent); color:var(--green); background:var(--green-bg)}
+.ghost .gdot{width:6px; height:6px; border-radius:50%; background:currentColor}
+.trendbadge{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; border-radius:99px; padding:4px 10px; border:1px solid; margin-left:auto}
+.head .trendbadge + .ghost, .head .frag-chip + .ghost{margin-left:8px}
+.trendbadge.up{color:var(--green); background:var(--green-bg); border-color:color-mix(in srgb,var(--green) 38%,transparent)}
+.trendbadge.down{color:var(--red); background:var(--red-bg); border-color:color-mix(in srgb,var(--red) 38%,transparent)}
+.trendbadge.shake{animation:shake .5s cubic-bezier(.36,.07,.19,.97) infinite}
+@keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-3px)}40%,60%{transform:translateX(3px)}}
+
+/* MID: número GRANDE à esquerda | direita = barra-meta (cima) + cluster alavancas (baixo) */
+.mid{display:flex; align-items:center; gap:28px; margin-top:22px}
+.numwrap{flex:none; display:flex; flex-direction:column; align-items:flex-start; gap:6px}
+.bignum{font-family:var(--font-mono); font-weight:600; letter-spacing:-.02em; color:var(--fg); line-height:.86; font-size:104px}
+.rcol{flex:1; min-width:0; display:flex; flex-direction:column; gap:14px}
+.metabar{position:relative; height:15px; border-radius:99px; background:linear-gradient(90deg,var(--red) 0%,var(--red) 25%,var(--yellow) 25%,var(--yellow) 40%,var(--green) 40%,var(--green) 100%); box-shadow:inset 0 0 0 1px var(--overlay-sm)}
+.metabar .tick{position:absolute; top:-2px; bottom:-2px; width:1.5px; background:var(--bg-surface); opacity:.7}
+.markerwrap{position:absolute; top:50%; transform:translate(-50%,-50%); z-index:3}
+.marker{display:block; width:23px; height:23px; border-radius:50%; background:var(--fg); box-shadow:0 0 0 3px var(--bg-surface), 0 0 12px color-mix(in srgb,var(--mod-ati) 60%,transparent)}
+.metabar-scale{position:relative; height:13px; margin-top:7px; font-size:9.5px; color:var(--fg-subtle)}
+.metabar-scale span{position:absolute; transform:translateX(-50%); white-space:nowrap}
+.metabar-scale span.l0{left:0; transform:none} .metabar-scale span.l100{left:auto; right:0; transform:none}
+.metabar-scale .meta{color:var(--fg-body); font-weight:600}
+
+/* ── PRÉ ANÁLISE — as 3 alavancas em linha limpa (sem caixas/pílulas) ── */
+.prelabel{display:flex; align-items:center; gap:9px; font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--fg-subtle); margin:30px 0 0}
+.prelabel::after{content:""; flex:1; height:1px; background:var(--border-subtle)}
+.levers{display:flex; gap:0; margin-top:14px}
+.lever{flex:1; min-width:0; display:flex; align-items:center; gap:11px; padding:4px 18px}
+.lever + .lever{border-left:1px solid var(--border-subtle)}
+.lever:first-child{padding-left:2px}
+.lever .lico{flex:none; width:30px; height:30px; border-radius:8px; display:grid; place-items:center; color:var(--fg-muted)}
+.lever .lico svg{width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+.lever .lbody{min-width:0; display:flex; flex-direction:column; gap:3px}
+.lever .lval{display:flex; align-items:center; gap:7px}
+.lever .ldot{width:7px; height:7px; border-radius:50%; flex:none}
+.lever .lnum{font-family:var(--font-mono); font-size:18px; font-weight:700; color:var(--fg); line-height:1}
+.lever .lname{font-size:10.5px; color:var(--fg-muted); line-height:1.3}
+.lever .lname b{color:var(--fg-body); font-weight:700}
+/* Opção B — tratamento "chip" da bolinha+sigla (variação fina, mesma superfície) */
+[data-opt="B"] .lever{flex-direction:column; align-items:flex-start; gap:6px; text-align:left}
+[data-opt="B"] .lever .lico{display:none}
+[data-opt="B"] .lever .lname{white-space:normal}
+[data-opt="B"] .lever .lnum{font-size:22px}
+/* Opção C — número à esquerda destacado, ícone em traço de cor da alavanca */
+[data-opt="C"] .lever .lico{background:transparent}
+[data-opt="C"] .lever .lnum{font-size:20px}
+[data-opt="C"] .lever .lname{white-space:normal}
+
+/* ECG bottom — Diagnosticar NA linha, na cor do semáforo */
+.ecg{display:flex; align-items:center; gap:12px; margin-top:26px; padding-top:18px; border-top:1px solid var(--border-subtle)}
+.ecg .line{flex:1; min-width:0; height:28px}
+.ecg .line svg{width:100%; height:28px; display:block; overflow:visible}
+.ecg .base{stroke:var(--ecg); opacity:.5; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.ecg .sweep{stroke:var(--ecg); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:18 300; animation:ecg-sweep 3.4s linear infinite; filter:drop-shadow(0 0 3px var(--ecg))}
+.ecg .arr{stroke:var(--ecg); opacity:.5; fill:none; stroke-width:2.2; stroke-linecap:round}
+.ecg.red .sweep{animation-duration:2.0s}
+.ecg .txt{flex:none; position:relative; display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; letter-spacing:.01em; color:var(--ecg)}
+.ecg .txt .soon{font-size:7.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--soon); background:var(--soon-bg); border:1px solid color-mix(in srgb,var(--soon) 26%,transparent); border-radius:99px; padding:1.5px 6px; white-space:nowrap}
+@keyframes ecg-sweep{ from{stroke-dashoffset:318} to{stroke-dashoffset:0} }
+@media (prefers-reduced-motion:reduce){ .ecg .sweep{animation:none} .trendbadge.shake{animation:none} }
+
+/* Estado: Aguardando / Amostra pequena */
+.await{margin-top:20px; display:flex; flex-direction:column; gap:8px}
+.await .badge{display:inline-flex; align-items:center; gap:8px; align-self:flex-start; font-size:12.5px; font-weight:600; color:var(--fg-body); background:var(--surface-2); border:1px dashed var(--border-hover); border-radius:9px; padding:9px 14px}
+.frag-chip{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--fg-muted); background:var(--surface-2); border:1px solid var(--border-hover); border-radius:99px; padding:4px 11px}
+.head .frag-chip{margin-left:auto}
+
+/* DOCK — barra de controle flutuante (1 link, ao vivo) */
+.dock{position:fixed; left:50%; transform:translateX(-50%); bottom:14px; z-index:80; display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; background:var(--bg); border:1px solid var(--border-hover); border-radius:18px; padding:8px 10px; box-shadow:0 10px 30px rgba(0,0,0,.28); max-width:calc(100vw - 20px)}
+.dock .seg{display:inline-flex; align-items:center; gap:6px; background:var(--surface-2); border-radius:99px; padding:3px}
+.dock .seg button{appearance:none; border:0; background:transparent; cursor:pointer; color:var(--fg-muted); font-size:11.5px; font-weight:600; padding:5px 9px; border-radius:99px; white-space:nowrap}
+.dock .seg button[aria-pressed="true"]{background:var(--bg); color:var(--fg); box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.dock .tag{font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--fg-subtle); padding-left:4px}
+.dock .note{font-size:9px; color:var(--fg-subtle); width:100%; text-align:center}
+
+@media (min-width:720px){ .wrap{padding:20px} }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="bc">Painel da Escala › Produto › Ativação › Dashboard</span>
+  <div class="aparencia" id="aparencia"><button data-theme="light">☀︎ Claro</button><button data-theme="dark" aria-pressed="true">☾ Escuro</button></div>
+</div>
+
+<div class="wrap">
+  <h1 class="tabhdr">Ativação</h1>
+  <div class="subnav"><button>Configuração</button><button aria-selected="true">Dashboard</button></div>
+  <div class="stack"><div id="hero"></div></div>
+</div>
+
+<div class="dock">
+  <div class="seg" id="optSeg"><span class="tag">Opção</span>
+    <button data-opt="A" aria-pressed="true">A</button><button data-opt="B">B</button><button data-opt="C">C</button></div>
+  <div class="seg" id="estadoSeg"><span class="tag">Estado</span>
+    <button data-estado="ok" aria-pressed="true">OK</button><button data-estado="await">Aguardando</button><button data-estado="frag">Amostra peq.</button></div>
+  <div class="seg" id="semSeg"><span class="tag">Semáforo</span>
+    <button data-sem="green">🟢</button><button data-sem="yellow" aria-pressed="true">🟡</button><button data-sem="red">🔴</button></div>
+</div>
+
+<script>
+const qs = new URLSearchParams(location.search);
+let state = { opt: qs.get('opt')||'A', estado: qs.get('estado')||'ok', sem: qs.get('sem')||'yellow' };
+
+// SEM = mapa do semáforo (número-norte, tendência, cor) — 1 régua por estado
+const SEM = {
+  green: {col:'var(--green)',  val:72, trend:'+6,4', tdir:'up'},
+  yellow:{col:'var(--yellow)', val:38, trend:'+4,2', tdir:'up'},
+  red:   {col:'var(--red)',    val:24, trend:'-3,1', tdir:'down'},
+};
+// as 3 alavancas: número + cor própria (régua) + sigla/nome completo. Mudam por semáforo (puxando pra baixo no 🔴).
+const LEVERS = {
+  green: [
+    {ic:'clock', dot:'var(--green)',  num:'14h', sig:'TTV',      full:'Tempo Até o Valor'},
+    {ic:'check', dot:'var(--green)',  num:'78%', sig:'Setup-D7', full:'Configuração concluída em 7 dias'},
+    {ic:'repeat',dot:'var(--yellow)', num:'61%', sig:'OCR-D14',  full:'Retorno de uso até o dia 14'},
+  ],
+  yellow: [
+    {ic:'clock', dot:'var(--red)',    num:'52h', sig:'TTV',      full:'Tempo Até o Valor'},
+    {ic:'check', dot:'var(--yellow)', num:'54%', sig:'Setup-D7', full:'Configuração concluída em 7 dias'},
+    {ic:'repeat',dot:'var(--yellow)', num:'44%', sig:'OCR-D14',  full:'Retorno de uso até o dia 14'},
+  ],
+  red: [
+    {ic:'clock', dot:'var(--red)',    num:'71h', sig:'TTV',      full:'Tempo Até o Valor'},
+    {ic:'check', dot:'var(--red)',    num:'37%', sig:'Setup-D7', full:'Configuração concluída em 7 dias'},
+    {ic:'repeat',dot:'var(--red)',    num:'29%', sig:'OCR-D14',  full:'Retorno de uso até o dia 14'},
+  ],
+};
+const ICONS = {
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check:'<path d="M4 12l5 5L20 6"/>',
+  repeat:'<path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+};
+
+function trendBadge(){
+  if(state.estado!=='ok') return '';
+  const s=SEM[state.sem]; const up=s.tdir==='up';
+  const shake = state.sem==='red' ? ' shake' : '';
+  const arrow = up ? '▲' : '▼';
+  return `<span class="trendbadge ${up?'up':'down'}${shake}">${arrow} ${s.trend} pts</span>`;
+}
+
+function metaBar(val){
+  const pmf=40, mkt=60;
+  return `<div>
+    <div class="metabar">
+      <span class="tick" style="left:25%"></span><span class="tick" style="left:40%"></span>
+      <span class="markerwrap" style="left:${val}%"><span class="marker"></span></span>
+    </div>
+    <div class="metabar-scale">
+      <span class="l0">0%</span>
+      <span class="meta" style="left:${pmf}%">PMF ${pmf}%</span>
+      <span class="meta" style="left:${mkt}%">Mercado ${mkt}%</span>
+      <span class="l100">100%</span>
+    </div>
+  </div>`;
+}
+
+function levers(){
+  const rows = LEVERS[state.sem].map(l=>`
+    <div class="lever">
+      <span class="lico">${ICONS[l.ic] ? '<svg viewBox="0 0 24 24">'+ICONS[l.ic]+'</svg>' : ''}</span>
+      <div class="lbody">
+        <div class="lval"><span class="ldot" style="background:${l.dot}"></span><span class="lnum">${l.num}</span></div>
+        <div class="lname"><b>${l.sig}</b> — ${l.full}</div>
+      </div>
+    </div>`).join('');
+  return `<div class="prelabel">Pré análise · alavancas</div><div class="levers">${rows}</div>`;
+}
+
+function ecg(col, key){
+  return `<div class="ecg ${key}" style="--ecg:${col}">
+    <span class="line"><svg viewBox="0 0 300 28" preserveAspectRatio="none">
+      <path class="base" d="M0 14 H70 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H300"/>
+      <path class="sweep" d="M0 14 H70 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H300"/>
+    </svg></span>
+    <span class="txt"><span>Diagnosticar</span><span class="soon">em breve</span></span>
+  </div>`;
+}
+
+function heroHTML(){
+  const s = SEM[state.sem];
+  function headTop(extra){ return `<div class="head">
+      <span class="modtag">● Ativação</span>
+      <div class="id"><span class="nm">CR6 · Taxa de Primeiro Impacto</span><span class="full">North Star · 7 dias</span></div>
+      ${extra||''}
+      <span class="ghost"><span class="gdot"></span>GHOST-R 3,1%</span>
+    </div>`; }
+
+  if(state.estado==='await'){
+    return `<div class="hero">${headTop('')}
+      <div class="await">
+        <span class="badge">⏳ Aguardando janela de 7 dias fechar</span>
+      </div>
+      ${ecg(s.col, state.sem)}
+    </div>`;
+  }
+
+  const fragChip = state.estado==='frag' ? `<span class="frag-chip">▢ Amostra pequena · n=14</span>` : '';
+  const numColor = state.estado==='frag' ? 'color:var(--fg-muted)' : '';
+
+  return `<div class="hero">${headTop(trendBadge()+fragChip)}
+    <div class="mid">
+      <div class="numwrap"><div class="bignum" style="${numColor}">${s.val}%</div></div>
+      <div class="rcol">${metaBar(s.val)}</div>
+    </div>
+    ${levers()}
+    ${ecg(s.col, state.sem)}
+  </div>`;
+}
+
+function render(){
+  document.documentElement.setAttribute('data-opt', state.opt);
+  document.getElementById('hero').innerHTML = heroHTML();
+  // semáforo só faz sentido no estado OK (com dado pra colorir)
+  document.querySelectorAll('#semSeg button').forEach(b=>{ const on=state.estado==='ok'; b.style.opacity=on?1:.4; b.style.pointerEvents=on?'auto':'none'; });
+}
+
+function bindSeg(id, attr, apply){
+  document.querySelectorAll('#'+id+' button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#'+id+' button').forEach(b=>b.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      apply(btn.getAttribute(attr));
+    });
+  });
+}
+bindSeg('optSeg','data-opt', v=>{ state.opt=v; render(); });
+bindSeg('estadoSeg','data-estado', v=>{ state.estado=v; render(); });
+bindSeg('semSeg','data-sem', v=>{ state.sem=v; render(); });
+function setTheme(v){
+  document.documentElement.setAttribute('data-theme', v);
+  document.querySelectorAll('#aparencia button').forEach(b=> b.setAttribute('aria-pressed', String(b.getAttribute('data-theme')===v)));
+  try{ localStorage.setItem('p2-theme', v); }catch(e){}
+}
+bindSeg('aparencia','data-theme', v=>setTheme(v));
+
+// sincroniza pressed inicial com o state (querystring)
+[['optSeg','data-opt','opt'],['estadoSeg','data-estado','estado'],['semSeg','data-sem','sem']].forEach(([id,attr,key])=>{
+  document.querySelectorAll('#'+id+' button').forEach(b=> b.setAttribute('aria-pressed', String(b.getAttribute(attr)===state[key])));
+});
+// tema: querystring > localStorage > default (dark) — persistência leve (toggle Aparência, regra DS)
+let theme0 = qs.get('theme');
+if(!theme0){ try{ theme0 = localStorage.getItem('p2-theme'); }catch(e){} }
+setTheme(theme0 || 'dark');
+render();
+</script>
+</body>
+</html>
