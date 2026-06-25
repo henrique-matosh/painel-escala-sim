@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aba: Ativação — Simulação numbers-only v2</title>
+<style>
+  :root{
+    --verde:#16a34a;
+    --amarelo:#d97706;
+    --vermelho:#dc2626;
+    --ink:#1f2937;
+    --ink-2:#4b5563;
+    --ink-3:#6b7280;
+    --linha:#e5e7eb;
+    --fundo:#f3f4f6;
+    --card:#ffffff;
+    --callout-bg:#fffbeb;
+    --callout-borda:#fbbf24;
+    --azul-funil:#eff6ff;
+    --azul-borda:#bfdbfe;
+    --amarelo-ind:#fefce8;
+    --amarelo-borda:#fde68a;
+    --c1:#0f766e;   /* Camada 1 — verde-azulado */
+    --c1-bg:#f0fdfa;
+    --c1-borda:#99f6e4;
+    --c2:#6d28d9;   /* Camada 2 — roxo */
+    --c2-bg:#faf5ff;
+    --c2-borda:#e9d5ff;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:var(--fundo);
+    color:var(--ink);
+    font-size:16px;
+    line-height:1.5;
+  }
+
+  /* ===== ESTRUTURA BASE = CELULAR (1 coluna) ===== */
+  .wrap{
+    max-width:480px;
+    margin:0 auto;
+    padding:12px;
+  }
+
+  /* ----- Banner de aviso ----- */
+  .banner{
+    background:#1f2937;
+    color:#fff;
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:14px;
+  }
+  .banner h2{
+    margin:0 0 8px;
+    font-size:15px;
+    line-height:1.35;
+  }
+  .banner ol{
+    margin:8px 0 0;
+    padding-left:20px;
+    font-size:13px;
+    color:#d1d5db;
+    line-height:1.5;
+  }
+  .banner li{margin-bottom:4px;}
+  .banner b{color:#fde68a;}
+
+  /* ----- Cabeçalho da aba ----- */
+  .aba-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .aba-head .tab{
+    background:var(--card);
+    border:1px solid var(--linha);
+    border-radius:999px;
+    padding:6px 14px;
+    font-weight:600;
+    font-size:15px;
+  }
+  .aba-head .resto{
+    font-size:13px;
+    color:var(--ink-3);
+  }
+  .sub-aba{
+    font-size:13px;
+    color:var(--ink-3);
+    margin:0 0 14px;
+  }
+
+  /* ----- Menu de período (filtro de exploração) ----- */
+  .periodo-bar{
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:12px;
+    padding:11px 13px;
+    margin:0 0 14px;
+  }
+  .periodo-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .periodo-top label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-2);
+  }
+  .periodo-bar select{
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink);
+    border:1px solid var(--linha);
+    border-radius:8px;
+    padding:8px 10px;
+    min-height:44px;
+    background:#f9fafb;
+    flex:1;
+    min-width:120px;
+  }
+  .periodo-nota{
+    font-size:11px;
+    color:var(--ink-3);
+    line-height:1.4;
+    margin:8px 0 0;
+  }
+  .periodo-nota b{color:var(--ink-2);}
+
+  /* ----- Callouts amarelos ----- */
+  .callout{
+    background:var(--callout-bg);
+    border:1px solid var(--callout-borda);
+    border-left:4px solid var(--callout-borda);
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:13px;
+    color:#78350f;
+    margin:10px 0;
+  }
+  .callout b{color:#92400e;}
+
+  /* ----- Seções ----- */
+  .secao-rotulo{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-3);
+    margin:18px 0 8px;
+  }
+
+  /* ----- Etiquetas de Camada 1 / Camada 2 ----- */
+  .cam-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:3px 8px;
+    border-radius:999px;
+    vertical-align:middle;
+  }
+  .cam1{background:var(--c1-bg);color:var(--c1);border:1px solid var(--c1-borda);}
+  .cam2{background:var(--c2-bg);color:var(--c2);border:1px solid var(--c2-borda);}
+  .cam-legenda{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    font-size:11.5px;
+    color:var(--ink-2);
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:10px;
+    padding:9px 11px;
+    margin:0 0 14px;
+    line-height:1.45;
+  }
+  .cam-legenda .li{flex:1;min-width:180px;}
+
+  /* ----- Card genérico ----- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--linha);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:12px;
+    position:relative;
+  }
+  .card-camada{
+    position:absolute;
+    top:-9px;
+    left:14px;
+  }
+
+  /* ----- Rótulo TIPO DE VISUALIZAÇÃO ----- */
+  .viz-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--ink-3);
+    background:#f3f4f6;
+    border:1px solid var(--linha);
+    border-radius:6px;
+    padding:2px 7px;
+    white-space:nowrap;
+  }
+
+  /* ----- Card dominante CR6 ----- */
+  .cr6-card{
+    border:2px solid var(--linha);
+    cursor:pointer;
+    transition:box-shadow .15s, border-color .15s;
+  }
+  .cr6-card:hover, .cr6-card:focus-visible{
+    box-shadow:0 4px 14px rgba(0,0,0,.10);
+    border-color:#cbd5e1;
+    outline:none;
+  }
+  .cr6-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .cr6-titulo{
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink-2);
+    margin:0;
+  }
+  .cr6-titulo span{
+    display:block;
+    font-size:12px;
+    font-weight:400;
+    color:var(--ink-3);
+  }
+  .cr6-titulo span.cr6-explica{
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--ink-2);
+    margin-top:2px;
+  }
+  .pill{
+    font-size:11px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .pill-norte{background:#eef2ff;color:#3730a3;}
+  .cr6-num{
+    font-size:56px;
+    font-weight:800;
+    line-height:1;
+    margin:10px 0 2px;
+    letter-spacing:-.02em;
+  }
+  .cr6-meta{
+    font-size:13px;
+    color:var(--ink-3);
+    margin:0 0 8px;
+  }
+
+  /* semáforos */
+  .dot{
+    display:inline-block;
+    width:10px;height:10px;
+    border-radius:50%;
+    margin-right:5px;
+    vertical-align:middle;
+  }
+  .g{background:var(--verde);}
+  .y{background:var(--amarelo);}
+  .r{background:var(--vermelho);}
+  .txt-g{color:var(--verde);font-weight:600;}
+  .txt-y{color:var(--amarelo);font-weight:600;}
+  .txt-r{color:var(--vermelho);font-weight:600;}
+
+  /* sparkline tendência */
+  .tend{
+    display:flex;align-items:center;gap:8px;
+    background:#f9fafb;
+    border-radius:8px;
+    padding:8px 10px;
+    margin:6px 0 12px;
+    font-size:13px;
+    color:var(--ink-2);
+  }
+  .tend svg{flex:none;}
+
+  /* ----- TRATAMENTO POR COR ----- */
+  .tratamento{
+    border-radius:9px;
+    padding:9px 11px;
+    margin:8px 0;
+    font-size:12.5px;
+    line-height:1.45;
+  }
+  .trat-vigente{
+    border:1px solid var(--amarelo-borda);
+    background:#fffbeb;
+    color:#854d0e;
+  }
+  .trat-legenda{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin:6px 0 4px;
+  }
+  .trat-chip{
+    font-size:11px;
+    font-weight:600;
+    padding:4px 9px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+  }
+  .trat-r{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;}
+  .trat-y{background:#fffbeb;color:#92400e;border:1px solid var(--amarelo-borda);}
+  .trat-g{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
+  .trat-chip.ativo{outline:2px solid currentColor;outline-offset:1px;}
+
+  /* drivers */
+  .drivers-titulo{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-2);
+    margin:6px 0 6px;
+  }
+  .driver{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    padding:6px 8px;
+    background:#f9fafb;
+    border-radius:7px;
+    margin-bottom:5px;
+  }
+  .driver .nome{font-weight:600;}
+  .driver .val{margin-left:auto;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+
+  /* selo GHOST-R — integridade sempre-presente, PRA FORA, leitura própria */
+  .ghost-selo{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:4px 7px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-left:3px solid #94a3b8;
+    border-radius:8px;
+    padding:8px 10px;
+    margin:10px 0;
+    font-size:12px;
+    color:var(--ink-2);
+  }
+  .ghost-ico{font-size:14px;line-height:1;}
+  .ghost-txt b{font-variant-numeric:tabular-nums;}
+  .ghost-leitura{
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:999px;
+    font-size:11px;
+  }
+  .gl-ok{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
+  .gl-at{background:#fffbeb;color:#92400e;border:1px solid var(--amarelo-borda);}
+  .gl-no{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;}
+  .ghost-hint{
+    flex-basis:100%;
+    font-size:11px;
+    color:var(--ink-3);
+    line-height:1.4;
+  }
+
+  /* OC-Δt6 — guardrail de cancelamento ≤7d, ao lado do CR6 */
+  .ocdt-selo{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:4px 7px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    border-left:3px solid #f97316;
+    border-radius:8px;
+    padding:8px 10px;
+    margin:0 0 10px;
+    font-size:12px;
+    color:#9a3412;
+  }
+  .ocdt-ico{font-size:14px;line-height:1;}
+  .ocdt-txt b{font-variant-numeric:tabular-nums;}
+  .ocdt-hint{
+    flex-basis:100%;
+    font-size:11px;
+    color:var(--ink-3);
+    line-height:1.4;
+  }
+
+  /* ICP — indicador/controle SEPARADO (lente PRA QUEM) */
+  .icp-card{
+    background:#faf5ff;
+    border:2px solid #e9d5ff;
+    cursor:pointer;
+    transition:box-shadow .15s, border-color .15s;
+  }
+  .icp-card:hover, .icp-card:focus-visible{
+    box-shadow:0 4px 14px rgba(124,58,237,.15);
+    border-color:#c4b5fd;
+    outline:none;
+  }
+  .icp-card-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .icp-card-titulo{
+    font-size:14px;
+    font-weight:700;
+    color:#5b21b6;
+    margin:0;
+  }
+  .icp-card-sub{
+    display:block;
+    font-size:12px;
+    font-weight:400;
+    color:var(--ink-3);
+    margin-top:2px;
+  }
+  .pill-icp{background:#f3e8ff;color:#6b21a8;}
+  .icp-card-mini{margin-bottom:10px;}
+  .icp-diag-btn{
+    width:100%;
+    min-height:44px;
+    border:none;
+    background:#7c3aed;
+    color:#fff;
+    border-radius:9px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .icp-diag-btn:hover{background:#6d28d9;}
+  .cohort{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    padding:6px 8px;
+    border-radius:7px;
+    margin-bottom:4px;
+    background:#fff;
+  }
+  .cohort .val{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;}
+
+  /* segmentos do GHOST-R no modal de público */
+  .seg-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    padding:8px 10px;
+    border-radius:8px;
+    margin-bottom:6px;
+    background:#fff;
+    border:1px solid var(--linha);
+  }
+  .seg-row .seg-nome{font-weight:600;}
+  .seg-row .seg-cr{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink-2);}
+  .seg-row .seg-ghost{
+    width:96px;text-align:right;
+    font-weight:700;font-variant-numeric:tabular-nums;
+  }
+  .seg-head{
+    display:flex;
+    font-size:10.5px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.05em;
+    color:var(--ink-3);
+    padding:0 10px 4px;
+  }
+  .seg-head .h-nome{flex:1;}
+  .seg-head .h-cr{width:auto;margin-left:auto;}
+  .seg-head .h-ghost{width:96px;text-align:right;}
+
+  /* botão diagnosticar dentro do card */
+  .diag-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:12px;
+    min-height:44px;
+    width:100%;
+    justify-content:center;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .diag-link:hover{background:#111827;}
+
+  .clique-dica{
+    font-size:11px;
+    color:var(--ink-3);
+    text-align:center;
+    margin-top:6px;
+  }
+
+  /* ===== MINI-FUNIL ===== */
+  .funil-card{
+    background:var(--azul-funil);
+    border:1px solid var(--azul-borda);
+  }
+  .funil-barra{
+    display:flex;
+    align-items:flex-end;
+    gap:4px;
+    height:64px;
+    margin:6px 0 4px;
+  }
+  .etapa{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+  }
+  .etapa .bar{
+    width:100%;
+    background:#93c5fd;
+    border-radius:5px 5px 0 0;
+  }
+  .etapa.gargalo .bar{background:var(--vermelho);}
+  .etapa .lbl{
+    font-size:9.5px;
+    color:var(--ink-3);
+    text-align:center;
+    line-height:1.15;
+  }
+  .gargalo-frase{
+    font-size:13px;
+    margin:8px 0;
+  }
+  .gargalo-frase b{color:var(--vermelho);}
+  .funil-btn{
+    width:100%;
+    min-height:44px;
+    border:1px solid var(--azul-borda);
+    background:#fff;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+    color:#1d4ed8;
+    cursor:pointer;
+  }
+  .funil-btn:hover{background:#eff6ff;}
+  .funil-completo{display:none;margin-top:12px;}
+  .funil-completo.open{display:block;}
+  .funil-linha{
+    display:flex;
+    align-items:center;
+    font-size:12.5px;
+    padding:8px 0;
+    border-top:1px solid var(--azul-borda);
+  }
+  .funil-linha .et{flex:1;font-weight:600;}
+  .funil-linha .ret{width:74px;text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+  .funil-linha .qda{width:62px;text-align:right;font-variant-numeric:tabular-nums;}
+  .funil-linha.foco .et{color:var(--vermelho);}
+  .funil-linha.foco .qda{color:var(--vermelho);font-weight:700;}
+
+  /* ===== INDICADORES (amarelo) ===== */
+  .ind-card{
+    background:var(--amarelo-ind);
+    border:1px solid var(--amarelo-borda);
+  }
+  .ind-titulo{
+    font-size:13px;
+    font-weight:700;
+    color:#854d0e;
+    margin:0 0 8px;
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  }
+  .ind-rank-linha{
+    display:flex;
+    align-items:center;
+    font-size:13px;
+    padding:5px 0;
+  }
+  .ind-rank-linha .tema{flex:1;}
+  .ind-rank-linha .qtd{color:var(--ink-3);font-variant-numeric:tabular-nums;margin-left:8px;}
+  .ind-rank-linha .pct{width:48px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
+
+  /* ===== MODAL DIAGNOSTICAR ===== */
+  .modal-bg{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(17,24,39,.55);
+    z-index:50;
+    padding:0;
+  }
+  .modal-bg.open{display:block;}
+  .modal{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    background:var(--fundo);
+    border-radius:18px 18px 0 0;
+    max-height:92vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:16px 14px 32px;
+  }
+  .modal-grip{
+    width:40px;height:5px;border-radius:3px;
+    background:#cbd5e1;
+    margin:0 auto 12px;
+  }
+  .modal-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .modal-head h3{margin:0;font-size:18px;}
+  .modal-fechar{
+    border:none;
+    background:#e5e7eb;
+    color:var(--ink);
+    width:44px;height:44px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+    flex:none;
+    line-height:1;
+  }
+  .modal-fechar:hover{background:#d1d5db;}
+  .metrica-row{
+    background:#fff;
+    border:1px solid var(--linha);
+    border-radius:10px;
+    padding:11px 12px;
+    margin-bottom:8px;
+  }
+  .metrica-head{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .metrica-head .sig{font-weight:700;font-size:14px;}
+  .metrica-nome{
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-2);
+    margin:4px 0 0;
+  }
+  .metrica-head .vv{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;font-size:14px;}
+  .metrica-papel{
+    font-size:11px;
+    font-weight:700;
+    padding:2px 7px;
+    border-radius:999px;
+    background:#eef2ff;color:#3730a3;
+  }
+  .papel-alav{background:#ecfeff;color:#155e75;}
+  .papel-guard{background:#fef2f2;color:#991b1b;}
+  .papel-valid{background:#f3f4f6;color:#4b5563;}
+  .metrica-oque{
+    font-size:12.5px;
+    color:var(--ink-3);
+    margin:6px 0 0;
+  }
+  .arvore-box{
+    background:#fff;
+    border:1px dashed #cbd5e1;
+    border-radius:10px;
+    padding:12px;
+    margin-top:12px;
+    font-size:13px;
+    color:var(--ink-2);
+  }
+  .arvore-box b{color:var(--ink);}
+  .arvore-box .ramo{
+    margin-top:6px;
+    padding-left:10px;
+    border-left:2px solid var(--linha);
+  }
+
+  .rodape{
+    text-align:center;
+    font-size:11px;
+    color:var(--ink-3);
+    margin:24px 0 8px;
+  }
+
+  /* ===== CAMADA DESKTOP (por cima) ===== */
+  @media (min-width:760px){
+    .wrap{max-width:920px;padding:24px;}
+    .topo-grid{
+      display:grid;
+      grid-template-columns:1.25fr 1fr;
+      gap:16px;
+      align-items:start;
+    }
+    .lado-direito > .card{margin-bottom:16px;}
+    .cr6-num{font-size:68px;}
+    .modal{
+      position:relative;
+      left:auto;right:auto;bottom:auto;
+      max-width:720px;
+      margin:5vh auto;
+      border-radius:18px;
+      max-height:90vh;
+    }
+    .modal-bg{padding:0;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== BANNER DE AVISO ===== -->
+  <div class="banner">
+    <h2>✅ NUMBERS-ONLY v2 — estrutura da Aba Ativação após as 9 decisões cravadas pelo CEO. Números fictícios (simulação estrutural).</h2>
+    <div style="font-size:13px;color:#d1d5db;margin-bottom:6px;">O que <b>mudou da v1 → v2</b> (o delta das 9 decisões):</div>
+    <ol>
+      <li><b>VRR saiu da Ativação</b> → foi pra <b>Retenção</b>. Ele media o funil completo em 21 dias = <b>além do corte de 7 dias</b> da ativação. Não aparece mais aqui (nem como alavanca, nem no Diagnosticar).</li>
+      <li>As métricas de meio agora são <b>5</b>: 4 alavancas que se empurram (<b>Setup-D7 · TTV · OCR-Δt6 · OUR</b>) + o vigia <b>GHOST-R</b>.</li>
+      <li>Apareceu o <b>menu de período</b> (7/14/30 dias) — um <b>filtro de exploração</b>. O CR6 e o Setup-D7 <b>ficam fixos em 7 dias</b> (são o corte da ativação); só o OCR e algumas visões leem o menu.</li>
+      <li>Novo selo <b>OC-Δt6</b> (cancelou em ≤7 dias) ao lado do CR6 — vigia se o número de cima é "para valer". 8-30 dias virou Retenção.</li>
+      <li>O <b>GHOST-R</b> ganhou <b>leitura própria</b> (confiável / atenção / não-confiável) e fica <b>sempre visível</b>, em qualquer cor, ao lado do CR6.</li>
+    </ol>
+    <div style="font-size:13px;color:#d1d5db;margin-top:10px;">▸ Continua valendo <b>1 pré-condição de dev</b> — não é decisão, é pré-requisito técnico:</div>
+    <ul style="margin:6px 0 0;padding-left:20px;font-size:13px;color:#d1d5db;line-height:1.5;">
+      <li>Ainda <b>não temos o código rodando</b> pra contar esse número — sem ele, o CR6 não existe no sistema real. (Fato a destravar no desenvolvimento.)</li>
+    </ul>
+  </div>
+
+  <!-- ===== CABEÇALHO DA ABA ===== -->
+  <div class="aba-head">
+    <span class="tab">Aba: Ativação</span>
+    <span class="resto">PMF (Fit com o Mercado) · Produto · Aquisição · <b>Ativação</b> · Retenção · Expansão</span>
+  </div>
+  <p class="sub-aba">O que aparece assim que você abre a aba. <span style="opacity:.7;">(no sistema chamamos de "Camada 1" — sem clicar nada.)</span></p>
+
+  <!-- ===== MENU DE PERÍODO (filtro de exploração) ===== -->
+  <div class="periodo-bar">
+    <div class="periodo-top">
+      <label for="periodoSel">📅 Período da análise</label>
+      <select id="periodoSel">
+        <option value="7" selected>Últimos 7 dias (padrão)</option>
+        <option value="14">Últimos 14 dias</option>
+        <option value="30">Últimos 30 dias</option>
+        <option value="N">Outro (N dias)…</option>
+      </select>
+    </div>
+    <p class="periodo-nota">
+      <b>Filtro de exploração</b> — serve pra simular janelas, não muda a métrica oficial.
+      <b>O CR6 e o Setup-D7 ficam SEMPRE fixos em 7 dias</b> (são o corte e o degrau da ativação).
+      Só o <b>OCR-Δt6</b> e algumas visões leem este menu — quando você muda, eles se renomeiam pra Δt<span id="periodoEco">7</span>.
+    </p>
+  </div>
+
+  <!-- ===== LEGENDA CAMADA 1 vs CAMADA 2 ===== -->
+  <div class="cam-legenda">
+    <span class="li"><span class="cam-tag cam1">Camada 1</span> = o que está <b>na tela</b> agora, sem clicar (pouca coisa, pra não poluir).</span>
+    <span class="li"><span class="cam-tag cam2">Camada 2</span> = o que só aparece quando você clica em <b>Diagnosticar</b> (o detalhe completo, escondido).</span>
+  </div>
+
+  <div class="callout">
+    <b>Isto é a métrica mais importante da fase</b> (o "North Star" = a métrica nº 1 da fase). Responde, batendo o olho: "a ativação tá indo bem?". Ativação = levar o cliente ao 1º impacto (valor real) em 7 dias, não só "criou conta".
+  </div>
+
+  <!-- ============ TOPO + DIREITA (grid no desktop) ============ -->
+  <div class="topo-grid">
+
+    <!-- ----- COLUNA ESQUERDA: O NORTE ----- -->
+    <div class="lado-esquerdo">
+      <div class="secao-rotulo">O que mais importa agora</div>
+
+      <div class="card cr6-card" id="cr6Card" tabindex="0" role="button" aria-label="Abrir Diagnosticar da CR6">
+        <span class="card-camada"><span class="cam-tag cam1">Camada 1</span></span>
+        <div class="cr6-top">
+          <p class="cr6-titulo">CR6 · Taxa de 1º Impacto<span class="cr6-explica">quantos clientes chegam ao 1º impacto em 7 dias (fixo)*</span><span style="font-size:11px;font-weight:400;color:var(--ink-3);display:block;">*os "7 dias" são o corte oficial da ativação — esta métrica NÃO lê o menu de período.</span></p>
+          <span class="pill pill-norte">A MÉTRICA Nº 1</span>
+        </div>
+
+        <div style="margin:6px 0 2px;"><span class="viz-tag">📊 % com semáforo · número grande</span></div>
+        <div class="cr6-num"><span class="dot y"></span>84%</div>
+        <p class="cr6-meta">Meta = limiar verde (≥ 90%) &nbsp;·&nbsp; <span class="txt-y">amarelo (a caminho)</span></p>
+        <p style="font-size:11px;color:var(--ink-3);margin:-4px 0 8px;line-height:1.4;"><b style="color:var(--ink-2);">Meta alinhada à referência de mercado.</b> A referência de mercado para SaaS (software vendido por assinatura) nesta faixa de ticket (metodologia Jacco van der Kooij) pede <b>≥90%</b> — é dela que saem <b>tanto a meta a perseguir quanto o farol verde</b> (por isso os dois coincidem, de propósito: bater a meta = entrar no verde). Não é um número solto. <span style="white-space:nowrap;">Faróis: 🟢 ≥90% &nbsp; 🟡 80–89% &nbsp; 🔴 abaixo de 80%.</span></p>
+
+        <!-- TRATAMENTO POR COR -->
+        <div class="trat-legenda">
+          <span class="trat-chip trat-r">🔴 conserta</span>
+          <span class="trat-chip trat-y ativo">🟡 empurra</span>
+          <span class="trat-chip trat-g">🟢 escala</span>
+        </div>
+        <div class="tratamento trat-vigente">
+          <b>Cor vigente: 🟡 amarelo → tratamento = EMPURRA.</b> Está a caminho da meta, mas não chegou. Plano de ação ativo: clique em <b>Diagnosticar</b> (abaixo) pra ver qual alavanca puxar. <span style="opacity:.85;">(🔴 seria "conserta agora" · 🟢 seria "escala / replica o que deu certo".)</span>
+        </div>
+
+        <!-- SELO GHOST-R: integridade SEMPRE visível (qualquer cor) · PRA FORA · leitura própria -->
+        <div class="ghost-selo" title="Vigia de integridade — checa se o número é real">
+          <span class="ghost-ico">🛡️</span>
+          <span class="ghost-txt"><b>GHOST-R 18%</b> · o número de cima é real?</span>
+          <span class="ghost-leitura gl-ok">✓ confiável</span>
+          <span class="viz-tag">🏷️ selo · leitura ternária</span>
+          <span class="ghost-hint">% que pagou e nunca entrou — vigia falso positivo. <b>Leitura PRÓPRIA</b> (≤20% confiável · 21-35% atenção · &gt;35% não-confiável), separada do semáforo do CR6. Selo <b>sempre visível em qualquer cor</b>. Detalhe no Diagnosticar.</span>
+        </div>
+
+        <!-- OC-Δt6: cancelamento ≤7d — guardrail de integridade ao lado do CR6 -->
+        <div class="ocdt-selo" title="Cancelamento dentro da janela de ativação">
+          <span class="ocdt-ico">⏱️</span>
+          <span class="ocdt-txt"><b>OC-Δt6 6%</b> · cancelou em ≤7 dias <span style="color:var(--verde);font-weight:700;">🟢 baixo</span></span>
+          <span class="viz-tag">🏷️ selo guardrail · menor=melhor</span>
+          <span class="ocdt-hint">Guardrail de integridade pareado ao CR6: gente que entrou e desistiu <b>dentro</b> da janela de 7 dias. <b>Não é "1 − CR6"</b> (são janelas diferentes — leitura visual, não conta). Menor = melhor. <b>Cancelamento de 8-30 dias vai pra Retenção.</b></span>
+        </div>
+
+        <div class="tend">
+          <span class="viz-tag">📈 sparkline · tendência</span>
+          <svg width="70" height="26" viewBox="0 0 70 26" aria-hidden="true">
+            <polyline points="2,20 14,18 26,17 38,13 50,10 68,6" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="38,13 50,10 68,6" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="3 3"/>
+          </svg>
+          <span>↗ se seguir assim, fecha o mês em <b>~88%</b> (rumo à meta ≥90%)</span>
+        </div>
+
+        <div class="drivers-titulo">▴ 4 alavancas LEADING (ordem: a mais a montante primeiro)</div>
+        <div style="font-size:11px;color:var(--ink-3);margin:-2px 0 6px;">(alavanca = o botão que você aperta pra melhorar o número. Ordem montante: Setup vem antes de TTV — TTV vermelho costuma ser fome de Setup.)</div>
+        <div class="driver"><span class="dot r"></span><span class="nome">Setup-D7</span> — configuração concluída em 7 dias <span class="val">44% 🔴</span></div>
+        <div class="driver"><span class="dot r"></span><span class="nome">TTV</span> — tempo até o valor <span class="val">61h 🔴</span></div>
+        <div class="driver"><span class="dot y"></span><span class="nome">OCR-Δt6</span> — retorno de uso na janela (lê o menu) <span class="val">31% 🟡</span></div>
+        <div class="driver"><span class="dot g"></span><span class="nome">OUR</span> — consumo real da 1ª entrega <span class="val">58% 🟢</span></div>
+        <div style="font-size:11px;color:var(--ink-3);margin-top:4px;">↳ ordem por regra montante (Setup→TTV→OCR→OUR). VRR <b>não está mais aqui</b> — foi pra Retenção.</div>
+
+        <button class="diag-link" id="diagBtn" type="button" style="margin-top:14px;">🔍 Diagnosticar <span style="font-weight:400;opacity:.85;">(Camada 2 — métricas escondidas)</span></button>
+        <p class="clique-dica">Clicar no card também abre o Diagnosticar.</p>
+      </div>
+    </div>
+
+    <!-- ----- COLUNA DIREITA: FUNIL + INDICADORES ----- -->
+    <div class="lado-direito">
+
+      <!-- ===== MINI-FUNIL ===== -->
+      <div class="secao-rotulo">Onde no caminho o cliente para</div>
+      <div class="card funil-card">
+        <span class="card-camada"><span class="cam-tag cam1">Camada 1</span></span>
+        <div style="margin:2px 0 6px;"><span class="viz-tag">🪜 mini-funil</span></div>
+        <div class="funil-barra" aria-hidden="true">
+          <div class="etapa"><div class="bar" style="height:100%"></div><div class="lbl">Comprou</div></div>
+          <div class="etapa"><div class="bar" style="height:82%"></div><div class="lbl">Acessou</div></div>
+          <div class="etapa"><div class="bar" style="height:64%"></div><div class="lbl">Config. concluída</div></div>
+          <div class="etapa gargalo"><div class="bar" style="height:37%"></div><div class="lbl">1ª entrega</div></div>
+          <div class="etapa"><div class="bar" style="height:30%"></div><div class="lbl">1º impacto</div></div>
+        </div>
+        <p class="gargalo-frase">Maior perda: <b>Config. concluída → 1ª entrega (−42% 🔴)</b> — é onde mais gente desiste.</p>
+        <p style="font-size:11px;color:var(--ink-3);margin:0 0 8px;">O degrau <b>"Config. concluída"</b> é o <b>TAC (Configuração Concluída)</b> = terminou de configurar. <b>TAC ≠ Setup-D7</b>: o TAC é um <b>degrau do funil</b> (concluiu, sem prazo); o <b>Setup-D7</b> é uma <b>alavanca do card</b> (concluiu <i>dentro de 7 dias</i>). São coisas distintas. <span style="opacity:.8;">(o nº de etapas é ilustrativo.)</span></p>
+        <p style="font-size:12px;color:#1d4ed8;background:#eff6ff;border:1px solid var(--azul-borda);border-radius:7px;padding:7px 9px;margin:0 0 8px;">Gargalo aqui → a alavanca <b>TTV</b> (tempo até o valor), lá no card, explica o porquê.</p>
+        <button class="funil-btn" id="funilBtn" type="button" aria-expanded="false">abrir funil completo ▸ <span style="font-weight:400;opacity:.8;">(Camada 2)</span></button>
+
+        <div class="funil-completo" id="funilCompleto">
+          <div class="funil-linha"><span class="et">Comprou</span><span class="ret">100%</span><span class="qda">820</span></div>
+          <div class="funil-linha"><span class="et">Acessou a conta</span><span class="ret">−18%</span><span class="qda">672</span></div>
+          <div class="funil-linha"><span class="et">Concluiu a configuração <span style="font-weight:400;color:var(--ink-3);font-size:11px;">(TAC)</span></span><span class="ret">−22%</span><span class="qda">524</span></div>
+          <button class="funil-linha foco" id="gargaloBtn" type="button" aria-expanded="false" style="width:100%;border:none;background:none;cursor:pointer;text-align:left;font:inherit;"><span class="et">1ª entrega ⚠️ <span style="font-weight:400;color:var(--ink-3);font-size:11px;">(clique →)</span></span><span class="ret">−42%</span><span class="qda">304</span></button>
+          <div class="funil-linha"><span class="et">1º impacto — valor real</span><span class="ret">−19%</span><span class="qda">246</span></div>
+          <div style="font-size:11px;color:var(--ink-3);margin-top:8px;">O funil da Ativação termina no <b>1º impacto</b> (≤7 dias). O degrau de "3 entregas / virar rotina" agora vive na <b>aba de Retenção</b> (era o que o VRR media).</div>
+
+          <!-- drill do gargalo: chamados + voz de quem caiu ali -->
+          <div class="gargalo-drill" id="gargaloDrill" style="display:none;margin-top:10px;background:#fff;border:1px solid var(--azul-borda);border-radius:9px;padding:11px 12px;">
+            <div style="font-size:12px;font-weight:700;color:#1d4ed8;margin-bottom:8px;">Quem caiu em "Config. concluída → 1ª entrega" (172 clientes)</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Chamados abertos por esses clientes</div>
+            <div class="ind-rank-linha"><span class="tema">"Travei no setup"</span><span class="qtd">21 chamados</span><span class="pct">28%</span></div>
+            <div class="ind-rank-linha"><span class="tema">Bug de export</span><span class="qtd">14 chamados</span><span class="pct">19%</span></div>
+            <div class="ind-rank-linha"><span class="tema">"Não entendi o que fazer"</span><span class="qtd">9 chamados</span><span class="pct">12%</span></div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;">O que disseram antes de desistir (exit-voice)</div>
+            <div style="font-size:12px;color:var(--ink-2);background:#f9fafb;border-radius:7px;padding:7px 9px;margin-bottom:5px;">"Não consegui fazer a primeira entrega sair, desisti." <span style="color:var(--ink-3);">— ao cancelar</span></div>
+            <div style="font-size:12px;color:var(--ink-2);background:#f9fafb;border-radius:7px;padding:7px 9px;">"Achei que era automático, fiquei perdido no meio do caminho." <span style="color:var(--ink-3);">— 14d inativo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>Mostra só o gargalo.</b> O funil inteiro abre no clique (Camada 2). <br>
+        Funil = <b>ONDE</b> no caminho o cliente para. As alavancas (lá no card) = <b>QUAL</b> delas puxar. São complementares.
+      </div>
+
+      <!-- ===== ICP — INDICADOR/CONTROLE SEPARADO (lente PRA QUEM) ===== -->
+      <div class="secao-rotulo">A lente do público (PRA QUEM)</div>
+
+      <div class="card icp-card" id="icpCard" tabindex="0" role="button" aria-label="Abrir diagnóstico de público (ICP)">
+        <span class="card-camada"><span class="cam-tag cam1">Camada 1</span></span>
+        <div class="icp-card-top">
+          <p class="icp-card-titulo">🎯 ICP · Quem chega
+            <span class="icp-card-sub">público-fit — o CR6 quebrado por tipo de cliente</span>
+          </p>
+          <span class="pill pill-icp">PRA QUEM</span>
+        </div>
+        <div style="margin:0 0 8px;"><span class="viz-tag">📊 % com semáforo · por coorte</span></div>
+        <div class="icp-card-mini">
+          <div class="cohort"><span class="dot g"></span>Fundador <span class="val txt-g">47%</span></div>
+          <div class="cohort"><span class="dot r"></span>Agência <span class="val txt-r">22%</span></div>
+          <div class="cohort"><span class="dot y"></span>Outro <span class="val txt-y">31%</span></div>
+        </div>
+        <button class="icp-diag-btn" id="icpDiagBtn" type="button">🔍 Abrir diagnóstico de público <span style="font-weight:400;opacity:.85;">(Camada 2)</span></button>
+        <p class="clique-dica" style="margin-top:8px;">Clicar no card também abre o diagnóstico de público.</p>
+      </div>
+
+      <div class="callout" style="border-left-color:#7c3aed;background:#faf5ff;border-color:#e9d5ff;color:#5b21b6;">
+        <b>O ICP responde "PRA QUEM".</b> É uma lente <b>separada</b> das métricas de meio do card — aquelas dizem <b>"ONDE quebrou"</b> (TTV, Setup, funil); o ICP diz <b>qual público</b> chega bem ou mal. São perguntas diferentes, por isso o ICP fica FORA do card.
+      </div>
+
+      <!-- ===== INDICADORES ===== -->
+      <div class="secao-rotulo">O que aconteceu nos últimos dias</div>
+
+      <div class="card ind-card">
+        <span class="card-camada"><span class="cam-tag cam1">Camada 1</span></span>
+        <p class="ind-titulo">❶ Chamados / Suporte <span style="font-weight:400;color:var(--ink-3);">— lê o menu de período</span> <span class="viz-tag">📋 ranking qualitativo · quantidade</span></p>
+        <div class="ind-rank-linha"><span class="tema">Cancelamento</span><span class="qtd">30 chamados</span><span class="pct">24%</span></div>
+        <div class="ind-rank-linha"><span class="tema">Bug de export</span><span class="qtd">18 chamados</span><span class="pct">14%</span></div>
+        <div class="ind-rank-linha"><span class="tema">"Não entendi"</span><span class="qtd">12 chamados</span><span class="pct">10%</span></div>
+      </div>
+
+      <div class="callout">
+        <b>Sinais que não viram número, mas explicam o comportamento</b> — a dor de quem comprou agora, pra bater o olho. Os demais candidatos ficam no Diagnosticar (Camada 2). <br>
+        <span style="font-size:12px;">Nota: o antigo card <b>OC21</b> (cancelou em ≤21 dias) <b>saiu daqui</b> — virou o selo <b>OC-Δt6</b> (≤7 dias, ao lado do CR6); o pedaço de 8-30 dias foi pra Retenção.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="border-left-color:#0f766e;background:#f0fdfa;border-color:#99f6e4;color:#115e59;">
+    <b>As 2 camadas, explícitas:</b> tudo marcado <span class="cam-tag cam1">Camada 1</span> está <b>na tela</b> agora (o pouco que importa pra bater o olho). Tudo marcado <span class="cam-tag cam2">Camada 2</span> só aparece quando você <b>clica</b> (Diagnosticar / funil completo / diagnóstico de público) — é o detalhe que existe, mas fica escondido pra não poluir.
+  </div>
+
+  <p class="rodape">Tudo aqui é NÚMERO FICTÍCIO, só pra ilustrar a lógica. · Numbers-only v2 — estrutura após as 9 decisões cravadas. Não é o protótipo final do Design System.</p>
+
+</div>
+
+<!-- ===================== MODAL DIAGNOSTICAR (CAMADA 2) ===================== -->
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-label="Diagnosticar a CR6">
+  <div class="modal">
+    <div class="modal-grip"></div>
+    <div class="modal-head">
+      <h3>🔍 Diagnosticar · CR6 <span class="cam-tag cam2" style="vertical-align:middle;">Camada 2</span></h3>
+      <button class="modal-fechar" id="modalFechar" type="button" aria-label="Fechar">×</button>
+    </div>
+
+    <div class="callout" style="margin-top:8px;">
+      <b>Esta é a Camada 2 — só aparece aqui.</b> Na tela principal (Camada 1) sobem só as 4 alavancas + o selo de integridade; aqui está a <b>lista completa das 5 métricas de meio do CR6</b> — pra não poluir a tela.
+    </div>
+
+    <div class="callout" style="border-left-color:#94a3b8;background:#f8fafc;border-color:#e2e8f0;color:var(--ink-2);">
+      <b>O que cada cor de etiqueta significa:</b><br>
+      <b style="color:#155e75;">Alavanca</b> = o que você move pra melhorar o CR6 ·
+      <b style="color:#991b1b;">Alarme</b> = o vigia que avisa se o número é real.<br>
+      <span style="opacity:.85;">São <b>5</b>: 4 alavancas LEADING + 1 alarme. (O VRR não está mais nesta lista — migrou pra Retenção.)</span>
+    </div>
+
+    <!-- 4 alavancas LEADING (ordem montante: Setup → TTV → OCR → OUR) + 1 guardrail -->
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="dot r"></span><span class="sig">Setup-D7</span><span class="metrica-papel papel-alav">alavanca (o que mover)</span><span class="vv txt-r">44% 🔴</span></div>
+      <p class="metrica-nome">Concluiu a Configuração em 7 dias (Setup-D7)</p>
+      <p class="metrica-oque">% que concluiu a configuração em 7 dias. É o degrau mais a montante, antes do impacto — por isso vem PRIMEIRO (regra montante: TTV vermelho costuma ser fome de Setup). <b>Fixo em 7 dias</b> (não lê o menu de período).</p>
+    </div>
+
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="dot r"></span><span class="sig">TTV</span><span class="metrica-papel papel-alav">alavanca (o que mover)</span><span class="vv txt-r">61h 🔴</span></div>
+      <p class="metrica-nome">Tempo Até o Valor (TTV)</p>
+      <p class="metrica-oque">Tempo até o cliente sentir o 1º valor. Quanto menor, mais gente chega ao impacto. Vem depois do Setup (a montante dela está a configuração).</p>
+    </div>
+
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="dot y"></span><span class="sig">OCR-Δt6</span><span class="metrica-papel papel-alav">alavanca (o que mover)</span><span class="vv txt-y">31% 🟡</span></div>
+      <p class="metrica-nome">Taxa de Retorno de Uso na janela (OCR-Δt6)</p>
+      <p class="metrica-oque">% que voltou a usar dentro da janela do menu de período (uso repetido). <b>É a única que lê o menu</b> — no padrão 7 dias é "OCR-Δt6"; vira Δt14/Δt30 se você mudar. ⚠️ Os antigos benchmarks (≥30% / ≥50%) eram de 14 dias → no padrão 7 dias estão <b>[a recalibrar]</b>.</p>
+    </div>
+
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="dot g"></span><span class="sig">OUR</span><span class="metrica-papel papel-alav">alavanca (o que mover)</span><span class="vv txt-g">58% 🟢</span></div>
+      <p class="metrica-nome">Taxa de Consumo Real (OUR)</p>
+      <p class="metrica-oque">% que de fato consumiu a 1ª entrega. A única que mede consumo real — insubstituível. Aparece como ramo próprio na árvore de causa abaixo.</p>
+    </div>
+
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="dot g"></span><span class="sig">GHOST-R</span><span class="metrica-papel papel-guard">alarme (vigia se é real)</span><span class="vv txt-g">18% 🟢</span></div>
+      <p class="metrica-nome">Fantasmas — pagaram e nunca entraram (GHOST-R)</p>
+      <p class="metrica-oque">% que pagou e nunca logou. É um <b>alarme</b>: garante que o número de cima é real, não falso positivo — se ele sobe, os bons números podem ser ilusão. <b>É o mesmo selo 🛡️ que fica sempre visível no card do CR6</b> (Camada 1, em qualquer cor) — aqui está só o detalhe. Leitura própria: ≤20% confiável · 21-35% atenção · &gt;35% não-confiável.</p>
+    </div>
+
+    <!-- árvore de causa (sem VRR) -->
+    <div class="arvore-box">
+      <b>A árvore de causa (problema ≠ causa) — ordem montante:</b>
+      <div class="ramo">SE <b>Setup-D7 🔴 (44%)</b> → muita gente trava no degrau de configuração → <b>ação:</b> simplificar o passo a passo do setup (ex.: tirar campos opcionais). <span style="color:var(--ink-3);">[ação: simplificar o setup · responsável: quem for dono do setup]</span></div>
+      <div class="ramo">SE <b>TTV 🔴 (61h)</b> → o cliente tem dificuldade para sair do setup e fazer a 1ª entrega → <b>ação:</b> encurtar o caminho até a 1ª entrega (ex.: pré-preencher o setup). <span style="color:var(--ink-3);">[ação: encurtar o onboarding · responsável: quem for dono do setup]</span></div>
+      <div class="ramo">SE <b>OCR-Δt6 🟡 (31%)</b> → quem ativou não está voltando a usar na janela → <b>ação:</b> criar um gatilho de retorno no dia 4 (ex.: lembrete de uso). <span style="color:var(--ink-3);">[ação: lembrete de retorno · responsável: quem for dono do ciclo de vida]</span></div>
+      <div class="ramo">SE <b>OUR 🟢 (58%)</b> → o consumo da 1ª entrega está saudável → <b>ação:</b> escalar / replicar o que está funcionando (nada a consertar aqui). <span style="color:var(--ink-3);">[ação: manter e escalar · responsável: produto]</span></div>
+      <div style="font-size:12px;color:var(--ink-3);margin-top:8px;">Cada ramo desce de uma alavanca até <b>uma ação com responsável</b> (exemplos fictícios). A tela (Camada 1) mostra o <b>problema</b> (CR6 amarelo); aqui (Camada 2) mora a <b>causa-raiz</b> + a ação. <b>O VRR saiu da árvore</b> — sua leitura de funil-completo migrou pra Retenção.</div>
+    </div>
+
+    <p class="rodape" style="margin-bottom:0;">Números fictícios. Numbers-only v2 — simulação.</p>
+  </div>
+</div>
+
+<!-- ===================== MODAL DIAGNÓSTICO DE PÚBLICO (ICP · CAMADA 2) ===================== -->
+<div class="modal-bg" id="icpModalBg" role="dialog" aria-modal="true" aria-label="Diagnóstico de público (ICP)">
+  <div class="modal">
+    <div class="modal-grip"></div>
+    <div class="modal-head">
+      <h3>🎯 Diagnóstico de público · ICP <span class="cam-tag cam2" style="vertical-align:middle;">Camada 2</span></h3>
+      <button class="modal-fechar" id="icpModalFechar" type="button" aria-label="Fechar">×</button>
+    </div>
+
+    <div class="callout" style="margin-top:8px;border-left-color:#7c3aed;background:#faf5ff;border-color:#e9d5ff;color:#5b21b6;">
+      <b>Aqui só se olha PÚBLICO.</b> O ICP responde <b>"PRA QUEM"</b> — qual tipo de cliente ativa bem ou mal. É uma lente <b>separada</b> das métricas de meio (TTV, Setup, funil), que respondem <b>"ONDE quebrou"</b>. Aqui não tem alavanca de processo: tem <b>quem chega</b>.
+    </div>
+
+    <!-- CR6 quebrado por cohort/segmento -->
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="sig">CR6 por segmento</span><span class="metrica-papel papel-valid" style="background:#f3e8ff;color:#6b21a8;">público-fit</span></div>
+      <p class="metrica-oque" style="margin-bottom:8px;">A mesma Taxa de 1º Impacto (CR6 = 84% no geral), só que <b>quebrada por tipo de cliente</b>. Mostra quem o produto ativa bem — e quem não.</p>
+      <div class="cohort" style="border:1px solid var(--linha);"><span class="dot g"></span><span style="font-weight:600;">Fundador solo</span> <span class="val txt-g">47%</span></div>
+      <div class="cohort" style="border:1px solid var(--linha);"><span class="dot r"></span><span style="font-weight:600;">Agência</span> <span class="val txt-r">22%</span></div>
+      <div class="cohort" style="border:1px solid var(--linha);"><span class="dot y"></span><span style="font-weight:600;">Outro</span> <span class="val txt-y">31%</span></div>
+      <p class="metrica-oque" style="margin-top:8px;">Leitura: <b>fundador solo ativa melhor; agência trava</b>. Se a agência for público-alvo, o problema é de fit (produto x perfil), não só de processo.</p>
+    </div>
+
+    <!-- GHOST-R por segmento -->
+    <div class="metrica-row">
+      <div class="metrica-head"><span class="sig">GHOST-R por segmento</span><span class="metrica-papel papel-guard">alarme · onde estão os fantasmas</span></div>
+      <p class="metrica-oque" style="margin-bottom:8px;"><b>Fantasma</b> = pagou e nunca entrou. Quando os fantasmas se <b>concentram num público</b>, é sinal de que a <b>aquisição está trazendo gente errada</b> (vendeu pra quem não tinha fit).</p>
+      <div class="seg-head"><span class="h-nome">Segmento</span><span class="h-cr">CR6</span><span class="h-ghost">GHOST-R</span></div>
+      <div class="seg-row"><span class="dot g"></span><span class="seg-nome">Fundador solo</span><span class="seg-cr">47%</span><span class="seg-ghost txt-g">9% 🟢</span></div>
+      <div class="seg-row"><span class="dot r"></span><span class="seg-nome">Agência</span><span class="seg-cr">22%</span><span class="seg-ghost txt-r">41% 🔴</span></div>
+      <div class="seg-row"><span class="dot y"></span><span class="seg-nome">Outro</span><span class="seg-cr">31%</span><span class="seg-ghost txt-y">14% 🟡</span></div>
+      <p class="metrica-oque" style="margin-top:8px;"><b>Os fantasmas estão concentrados em "Agência" (41%).</b> Tradução: a aquisição está vendendo pra agências que pagam e nunca entram — público errado entrando pela porta. <b>Ação fica na Aquisição</b> (filtrar/qualificar quem entra), não no setup do produto.</p>
+    </div>
+
+    <div class="arvore-box" style="border-color:#e9d5ff;">
+      <b>PRA QUEM ≠ ONDE quebrou:</b>
+      <div class="ramo" style="border-left-color:#e9d5ff;">O <b>ICP (esta tela)</b> responde <b>PRA QUEM</b> — qual público chega bem. Se um segmento ativa mal <b>e</b> concentra fantasmas → o problema é de <b>fit / aquisição</b> (trouxeram gente errada).</div>
+      <div class="ramo" style="border-left-color:var(--linha);">As <b>métricas de meio</b> (TTV, Setup, funil — no card do CR6) respondem <b>ONDE quebrou</b> no caminho — o ajuste é de <b>processo / produto</b>.</div>
+      <div style="font-size:12px;color:var(--ink-3);margin-top:8px;">Por isso o ICP é um controle <b>separado</b>: olhar público é uma pergunta diferente de olhar processo. Números fictícios.</div>
+    </div>
+
+    <p class="rodape" style="margin-bottom:0;">Números fictícios. Numbers-only v2 — simulação.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ----- menu de período (só ecoa o rótulo Δt — filtro de exploração) -----
+  var periodoSel = document.getElementById('periodoSel');
+  var periodoEco = document.getElementById('periodoEco');
+  if(periodoSel && periodoEco){
+    periodoSel.addEventListener('change', function(){
+      var v = periodoSel.value;
+      periodoEco.textContent = (v === 'N') ? 'N' : v;
+    });
+  }
+
+  // ----- abrir funil completo -----
+  var funilBtn = document.getElementById('funilBtn');
+  var funilCompleto = document.getElementById('funilCompleto');
+  funilBtn.addEventListener('click', function(){
+    var aberto = funilCompleto.classList.toggle('open');
+    funilBtn.innerHTML = aberto
+      ? 'fechar funil ▾ <span style="font-weight:400;opacity:.8;">(Camada 2)</span>'
+      : 'abrir funil completo ▸ <span style="font-weight:400;opacity:.8;">(Camada 2)</span>';
+    funilBtn.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+  });
+
+  // ----- drill do gargalo (chamados + exit-voice da etapa) -----
+  var gargaloBtn = document.getElementById('gargaloBtn');
+  var gargaloDrill = document.getElementById('gargaloDrill');
+  gargaloBtn.addEventListener('click', function(){
+    var aberto = gargaloDrill.style.display === 'block';
+    gargaloDrill.style.display = aberto ? 'none' : 'block';
+    gargaloBtn.setAttribute('aria-expanded', aberto ? 'false' : 'true');
+  });
+
+  // ----- abrir/fechar modal Diagnosticar -----
+  var modalBg = document.getElementById('modalBg');
+  var diagBtn = document.getElementById('diagBtn');
+  var cr6Card = document.getElementById('cr6Card');
+  var modalFechar = document.getElementById('modalFechar');
+
+  function abrirModal(){
+    modalBg.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function fecharModal(){
+    modalBg.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  diagBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    abrirModal();
+  });
+  cr6Card.addEventListener('click', abrirModal);
+  cr6Card.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirModal(); }
+  });
+  modalFechar.addEventListener('click', fecharModal);
+  modalBg.addEventListener('click', function(e){
+    if(e.target === modalBg){ fecharModal(); }
+  });
+
+  // ----- abrir/fechar modal Diagnóstico de Público (ICP) -----
+  var icpModalBg = document.getElementById('icpModalBg');
+  var icpCard = document.getElementById('icpCard');
+  var icpDiagBtn = document.getElementById('icpDiagBtn');
+  var icpModalFechar = document.getElementById('icpModalFechar');
+
+  function abrirIcpModal(){
+    icpModalBg.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function fecharIcpModal(){
+    icpModalBg.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  icpDiagBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    abrirIcpModal();
+  });
+  icpCard.addEventListener('click', abrirIcpModal);
+  icpCard.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirIcpModal(); }
+  });
+  icpModalFechar.addEventListener('click', fecharIcpModal);
+  icpModalBg.addEventListener('click', function(e){
+    if(e.target === icpModalBg){ fecharIcpModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){ fecharModal(); fecharIcpModal(); }
+  });
+})();
+</script>
+</body>
+</html>
