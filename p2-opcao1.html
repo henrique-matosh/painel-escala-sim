@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>P2 · Card da Métrica Principal (CR6) — Opção 1 (Design System)</title>
+<!--
+  PEÇA P2 — Card da Métrica Principal (CR6). OPÇÃO 1 = 100% Design System Oficial.
+  Reusa o card aprovado (cr6-card.html): mesmo DoD — sem tooltip, clique morto, diagnóstico NA LINHA,
+  cor só junto da régua, centralizado+enxuto, ZERO texto explicativo.
+  Mudança da ESPEC: as 3 ALAVANCAS vão ABAIXO do número (não coladas) + selo GHOST-R discreto ao lado do número.
+  Tokens token-a-token do DESIGN-SYSTEM-OFICIAL.md §2 (preto neutro + açure) · módulo Ativação = CIANO §2.6.
+  ?theme=light  alterna pelo toggle Aparência.
+-->
+<style>
+:root{
+  --bg:#FFFFFF; --bg-base:#F6F6F6; --bg-elevated:#F0F0F0; --bg-surface:#FFFFFF;
+  --border:#E8E8E8; --border-subtle:#EFEFEF; --border-hover:#D4D4D8;
+  --fg:#18181B; --fg-body:#3F3F46; --fg-muted:#71717A; --fg-subtle:#A1A1AA;
+  --surface-2:#F4F4F6; --overlay-sm:rgba(0,0,0,.05);
+  --mod-ati:#0E7490; --mod-ati-bg:rgba(14,116,144,.11); --soon:#2563EB; --soon-bg:rgba(37,99,235,.12);
+  --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --green:#1E9E54; --green-bg:rgba(30,158,84,.10);
+  --yellow:#9A7415; --yellow-bg:rgba(154,116,21,.11);
+  --red:#C8342F; --red-bg:rgba(200,52,47,.09);
+}
+[data-theme="dark"]{
+  --bg:#0A0A0B; --bg-base:#0A0A0B; --bg-elevated:#101012; --bg-surface:#161618;
+  --border:#2E2E2E; --border-subtle:#252525; --border-hover:#4B4B52;
+  --fg:#F2F2F4; --fg-body:#D4D4D8; --fg-muted:#9A9AA3; --fg-subtle:#6A6A73;
+  --surface-2:#1D1D20; --overlay-sm:rgba(255,255,255,.07);
+  --mod-ati:#06B6D4; --mod-ati-bg:rgba(6,182,212,.14); --soon:#60A5FA; --soon-bg:rgba(96,165,250,.16);
+  --green:#3FBE6E; --green-bg:rgba(63,190,110,.13);
+  --yellow:#E0B341; --yellow-bg:rgba(224,179,65,.13);
+  --red:#EF5350; --red-bg:rgba(239,83,80,.12);
+}
+*{box-sizing:border-box} html,body{margin:0}
+body{background:var(--bg-base); color:var(--fg-body); font-family:'Sora',system-ui,-apple-system,"Segoe UI",sans-serif; font-size:14px;
+  line-height:1.5; -webkit-font-smoothing:antialiased; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 20px}
+
+.topbar{position:fixed; top:0; left:0; right:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:var(--bg-elevated); border-bottom:1px solid var(--border)}
+.topbar .bc{font-size:11px; color:var(--fg-subtle); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.aparencia{display:inline-flex; align-items:center; gap:4px; background:var(--surface-2); border-radius:99px; padding:3px; flex:none}
+.aparencia button{appearance:none; border:0; background:transparent; cursor:pointer; color:var(--fg-muted); font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:99px}
+.aparencia button[aria-pressed="true"]{background:var(--bg-surface); color:var(--fg); box-shadow:0 1px 2px rgba(0,0,0,.12)}
+
+.stage{width:440px; max-width:100%}
+
+/* ── HERO — uma superfície só (sem caixas), faixa de accent do semáforo na borda esquerda ── */
+.hero{position:relative; border-radius:13px; border:1px solid var(--border); border-left:3px solid var(--border-hover); background:var(--bg-surface); padding:22px 24px 20px; text-align:center; box-shadow:var(--shadow)}
+
+.head{display:flex; flex-direction:column; align-items:center; gap:3px}
+.head .nm{font-family:'Space Grotesk',system-ui,sans-serif; font-size:15px; font-weight:700; letter-spacing:-.01em; color:var(--fg); line-height:1.2}
+.head .full{font-size:11.5px; color:var(--fg-muted)}
+
+/* faixa-régua + número centralizados */
+.center{display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:20px}
+.numwrap{position:relative; display:inline-flex; align-items:flex-start; gap:8px}
+.bignum{font-family:var(--font-mono); font-weight:600; letter-spacing:-.02em; color:var(--fg); line-height:.86; font-size:76px}
+.trendbadge{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; border-radius:99px; padding:4px 9px; border:1px solid; margin-top:8px}
+.trendbadge.up{color:var(--green); background:var(--green-bg); border-color:color-mix(in srgb,var(--green) 38%,transparent)}
+.trendbadge.down{color:var(--red); background:var(--red-bg); border-color:color-mix(in srgb,var(--red) 38%,transparent)}
+
+/* GHOST-R — selo de integridade discreto, ao lado do número */
+.ghost{display:inline-flex; align-items:center; gap:5px; align-self:flex-start; margin-top:10px; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.02em; color:var(--fg-muted); background:var(--surface-2); border:1px solid var(--border); border-radius:99px; padding:3px 9px; white-space:nowrap}
+.ghost .gdot{width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 16%,transparent)}
+
+/* régua meta (cor só aqui) */
+.rule{width:260px; max-width:82%}
+.metabar{position:relative; height:14px; border-radius:99px; background:linear-gradient(90deg,var(--red) 0%,var(--red) 25%,var(--yellow) 25%,var(--yellow) 40%,var(--green) 40%,var(--green) 100%); box-shadow:inset 0 0 0 1px var(--overlay-sm)}
+.metabar .tick{position:absolute; top:-2px; bottom:-2px; width:1.5px; background:var(--bg-surface); opacity:.7}
+.markerwrap{position:absolute; top:50%; transform:translate(-50%,-50%); z-index:3}
+.marker{position:relative; display:block; width:22px; height:22px; border-radius:50%; overflow:hidden; background:var(--fg); box-shadow:0 0 0 3px var(--bg-surface), 0 0 12px color-mix(in srgb,var(--mod-ati) 60%,transparent)}
+.marker svg{position:absolute; inset:0; width:100%; height:100%}
+.metabar-scale{position:relative; height:13px; margin-top:7px; font-size:9.5px; color:var(--fg-subtle)}
+.metabar-scale span{position:absolute; transform:translateX(-50%); white-space:nowrap}
+.metabar-scale .l0{left:0; transform:none} .metabar-scale .l100{left:auto; right:0; transform:none}
+.metabar-scale .meta{color:var(--fg-body); font-weight:600}
+
+/* sparkline mini, sem texto */
+.spark{width:120px; height:22px; opacity:.55}
+.spark svg{width:100%; height:100%; display:block; overflow:visible}
+.spark path{fill:none; stroke:var(--mod-ati); stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+/* ── AS 3 ALAVANCAS — ABAIXO do número ── */
+.levers{display:flex; justify-content:center; gap:30px; border-top:1px solid var(--border-subtle); margin-top:18px; padding-top:16px}
+.lever{display:flex; flex-direction:column; gap:4px; align-items:center; text-align:center}
+.lever .lhead{display:flex; align-items:center; gap:6px}
+.lever .ldot{width:7px; height:7px; border-radius:50%; flex:none}
+.lever .lsig{font-size:10px; font-weight:600; color:var(--fg-muted); letter-spacing:.02em}
+.lever .lval{font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--fg-body); line-height:1}
+
+/* ── Diagnosticar — ECG NA LINHA, cor do semáforo, clique morto ── */
+.ecg{display:flex; align-items:center; gap:12px; justify-content:center; margin-top:22px}
+.ecg .line{width:150px; height:26px}
+.ecg .line svg{width:100%; height:26px; display:block; overflow:visible}
+.ecg .base{stroke:var(--ecg); opacity:.5; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.ecg .sweep{stroke:var(--ecg); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:18 300; animation:ecg-sweep 3.4s linear infinite; filter:drop-shadow(0 0 3px var(--ecg))}
+.ecg .arr{stroke:var(--ecg); opacity:.5; fill:none; stroke-width:2.2; stroke-linecap:round}
+.ecg.red .sweep{animation-duration:2.0s}
+.ecg .btn{flex:none; display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; letter-spacing:.01em; color:var(--ecg); cursor:pointer; padding:8px 14px; border-radius:10px; background:color-mix(in srgb,var(--ecg) 12%,transparent); border:1px solid color-mix(in srgb,var(--ecg) 34%,transparent)}
+@keyframes ecg-sweep{ from{stroke-dashoffset:318} to{stroke-dashoffset:0} }
+@media (prefers-reduced-motion:reduce){ .ecg .sweep{animation:none} }
+:root{ --shadow:0 2px 8px rgba(30,30,50,.07) }
+[data-theme="dark"]{ --shadow:0 2px 8px rgba(0,0,0,.55) }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="bc">Painel da Escala › Produto › Ativação › Dashboard</span>
+  <div class="aparencia" id="aparencia"><button data-theme="light">☀︎ Claro</button><button data-theme="dark" aria-pressed="true">☾ Escuro</button></div>
+</div>
+
+<div class="stage">
+  <div class="hero" style="border-left-color:var(--red)">
+    <div class="head">
+      <span class="nm">CR6 · Taxa de Primeiro Impacto</span>
+      <span class="full">% que tem o 1º impacto em ≤7 dias</span>
+    </div>
+
+    <div class="center">
+      <div class="numwrap">
+        <span class="bignum">72%</span>
+        <span class="trendbadge up">▲ +3,4 pts</span>
+      </div>
+      <span class="ghost"><span class="gdot"></span>GHOST-R 18% · confiável</span>
+
+      <div class="rule">
+        <div class="metabar">
+          <span class="tick" style="left:25%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:60%"></span>
+          <span class="markerwrap" style="left:72%">
+            <span class="marker"><svg viewBox="0 0 974 974" preserveAspectRatio="xMidYMid slice"><path d="M-59 679.5C428 352.5 365.5 1356.5 1070 149.5" fill="none" stroke="var(--bg-surface)" stroke-width="150"/></svg></span>
+          </span>
+        </div>
+        <div class="metabar-scale">
+          <span class="l0">0</span><span style="left:60%" class="meta">meta 90</span><span class="l100">100</span>
+        </div>
+      </div>
+
+      <span class="spark"><svg viewBox="0 0 120 22" preserveAspectRatio="none"><path d="M0 16 L17 14 L34 17 L51 11 L68 13 L85 7 L102 9 L120 4"/></svg></span>
+    </div>
+
+    <div class="levers">
+      <div class="lever"><div class="lhead"><span class="ldot" style="background:var(--red)"></span><span class="lsig">TTV</span></div><span class="lval">61h</span></div>
+      <div class="lever"><div class="lhead"><span class="ldot" style="background:var(--red)"></span><span class="lsig">Setup-D7</span></div><span class="lval">44%</span></div>
+      <div class="lever"><div class="lhead"><span class="ldot" style="background:var(--yellow)"></span><span class="lsig">OCR-D14</span></div><span class="lval">31%</span></div>
+    </div>
+
+    <div class="ecg red" style="--ecg:var(--red)">
+      <span class="line"><svg viewBox="0 0 210 28" preserveAspectRatio="none">
+        <path class="base" d="M0 17 H34 l4 0 l3 -12 l4 22 l3 -15 l3 5 H210"/>
+        <path class="sweep" d="M0 17 H34 l4 0 l3 -12 l4 22 l3 -15 l3 5 H210"/>
+      </svg></span>
+      <span class="btn">Diagnosticar →</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const qs = new URLSearchParams(location.search);
+if(qs.get('theme')) document.documentElement.setAttribute('data-theme', qs.get('theme'));
+document.querySelectorAll('#aparencia button').forEach(b=> b.setAttribute('aria-pressed', String(b.getAttribute('data-theme')===document.documentElement.getAttribute('data-theme'))));
+document.querySelectorAll('#aparencia button').forEach(btn=>btn.addEventListener('click',()=>{
+  const v=btn.getAttribute('data-theme'); document.documentElement.setAttribute('data-theme',v);
+  document.querySelectorAll('#aparencia button').forEach(b=>b.setAttribute('aria-pressed', String(b.getAttribute('data-theme')===v)));
+}));
+</script>
+</body>
+</html>
