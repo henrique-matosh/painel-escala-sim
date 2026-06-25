@@ -258,7 +258,7 @@ function levers(){
       // FIEL à referência do CEO: lista vertical, valor à direita, sem anel/leader. SIGLA + NOME COMPLETO em cada alavanca.
       return `<div class="lever">
         <span class="ldot" style="background:${l.dot}"></span>
-        <span class="lname"><b class="lsig">${l.sig}</b> ${l.full}</span>
+        <span class="lname"><b>${l.sig}</b> — ${l.full}</span>
         <span class="lnum">${l.num}</span>
       </div>`;
     }
@@ -295,7 +295,7 @@ function topRow(){
   return `<div class="top">
     <span class="avatar">${AVATAR}</span>
     <div class="id">
-      <span class="kicker">CR6</span><span class="nm">Taxa de Primeiro Impacto</span>
+      <span class="nm">CR6 · Taxa de Primeiro Impacto</span>
       <span class="sub">% de cadastros que exportaram o 1º carrossel em ≤7 dias</span>
     </div>
     ${trendBadge()}
