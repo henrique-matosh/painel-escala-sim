@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR" data-theme="dark" data-opt="A">
+<html lang="pt-BR" data-theme="dark" data-opt="B">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -77,16 +77,7 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 .mid{display:flex; align-items:center; gap:30px; margin-top:18px}
 .numwrap{flex:none; display:flex; flex-direction:column; align-items:flex-start; gap:9px}
 .bignum{font-family:var(--font-mono); font-weight:600; letter-spacing:-.02em; color:var(--fg); line-height:.85; font-size:110px}
-/* 3. GHOST-R chip discreto — embaixo do número/à esquerda (onde o print põe) */
-.ghost{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; border-radius:99px; padding:4px 11px; border:1px solid color-mix(in srgb,var(--green) 32%,transparent); color:var(--green); background:var(--green-bg)}
-.ghost .gdot{width:6px; height:6px; border-radius:50%; background:currentColor}
-/* GHOST-R · 3 placements (toggle GHOST-R A/B/C muda SÓ isto) */
-/* A — chip abaixo do número (default) */
-/* B — selo no topo-direito, junto do trend */
-.ghost.gtop{font-size:10.5px; padding:3px 9px}
-.id .ghosttop{display:flex; align-items:center; gap:8px; margin-top:6px}
-/* C — selo discreto ao lado do título */
-.ghost.gtitle{font-size:10px; font-weight:700; letter-spacing:.02em; padding:2px 8px; border-radius:6px; opacity:.92}
+/* (GHOST-R deixou de ser chip espalhado — virou a 1ª LINHA FIXA da lista, ver §5-bis) */
 .nmrow{display:flex; align-items:center; gap:9px; flex-wrap:wrap}
 .rcol{flex:1; min-width:0; display:flex; flex-direction:column; gap:0}
 .metabar{position:relative; height:16px; border-radius:99px; background:linear-gradient(90deg,var(--red) 0%,var(--red) 25%,var(--yellow) 25%,var(--yellow) 40%,var(--green) 40%,var(--green) 100%); box-shadow:inset 0 0 0 1px var(--overlay-sm)}
@@ -111,6 +102,45 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 .lever .lbar i{display:block; height:100%; border-radius:99px; min-width:6px; transition:width .35s ease}
 .lever .lnum{flex:none; min-width:46px; text-align:right; font-family:var(--font-mono); font-size:18px; font-weight:700; color:var(--fg); line-height:1}
 .lever .lring{flex:none; width:13px; height:13px; border-radius:50%; box-shadow:0 0 0 1px var(--overlay-sm)}
+/* indicador de tendência da alavanca (vs período anterior) — UM lugar só (R1), cor pela POLARIDADE (R6) */
+.lever .ltrend{flex:none; display:inline-flex; align-items:center; gap:3px; min-width:64px; justify-content:flex-end; font-family:var(--font-mono); font-size:11.5px; font-weight:700; line-height:1; letter-spacing:-.01em; color:var(--fg-muted)}
+.lever .ltrend .lt-ar{font-size:10px; line-height:1}
+
+/* ── 5-bis. LINHA FIXA GHOST-R (GUARDRAIL de integridade — sempre a 1ª da lista, NUNCA sai) ── */
+/* Visual SEMPRE distinto das alavancas: fundo/borda próprios + divisor que a separa das 3 alavancas abaixo. */
+.guardrail{display:flex; align-items:center; gap:13px; padding:13px 16px;
+  background:linear-gradient(0deg,var(--overlay-sm),var(--overlay-sm)), var(--surface-2);
+  border-bottom:1px solid var(--border-hover); position:relative}
+.guardrail::after{content:""; position:absolute; left:16px; right:16px; bottom:-1px; height:1px; background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.guardrail .gr-icon{flex:none; width:26px; height:26px; display:grid; place-items:center; border-radius:7px;
+  color:var(--green); background:var(--green-bg); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--green) 30%,transparent)}
+.guardrail .gr-icon svg{width:15px; height:15px; display:block}
+.guardrail .gr-id{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px}
+.guardrail .gr-name{font-size:13.5px; color:var(--fg-body); line-height:1.25}
+.guardrail .gr-name b{color:var(--fg); font-weight:700}
+.guardrail .gr-tag{font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--fg-subtle)}
+.guardrail .gr-read{flex:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--green)}
+.guardrail .gr-read .gr-pct{font-family:var(--font-mono); font-size:16px; font-weight:700; line-height:1}
+
+/* VIS A — selo: ícone escudo + leitura "18% · confiável" (já é o layout base acima) */
+
+/* VIS B — mini-medidor / anel de confiança (substitui a leitura por um anel conic) */
+.guardrail .gr-ring{flex:none; position:relative; width:40px; height:40px; border-radius:50%;
+  background:conic-gradient(var(--green) calc(var(--gr-conf,82) * 1%), var(--bg-elevated) 0);
+  box-shadow:inset 0 0 0 1px var(--overlay-sm)}
+.guardrail .gr-ring::before{content:""; position:absolute; inset:5px; border-radius:50%; background:var(--surface-2)}
+.guardrail .gr-ring span{position:absolute; inset:0; display:grid; place-items:center; font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--green)}
+
+/* VIS C — MEDIDOR DE PIPS / segmentos discretos de integridade.
+   NÃO é barra: são 5 blocos verticais separados, escada de "força de sinal" — linguagem distinta das alavancas (barra horizontal contínua). */
+.guardrail .gr-pips{flex:none; display:inline-flex; align-items:flex-end; gap:4px; height:24px}
+.guardrail .gr-pips i{display:block; width:7px; border-radius:2px; background:var(--bg-elevated); box-shadow:inset 0 0 0 1px var(--overlay-sm)}
+.guardrail .gr-pips i:nth-child(1){height:9px}
+.guardrail .gr-pips i:nth-child(2){height:13px}
+.guardrail .gr-pips i:nth-child(3){height:17px}
+.guardrail .gr-pips i:nth-child(4){height:20px}
+.guardrail .gr-pips i:nth-child(5){height:24px}
+.guardrail .gr-pips i.on{box-shadow:none}
 
 /* ── 6. ECG na cor do semáforo + Diagnosticar (EM BREVE) ── */
 .ecg{display:flex; align-items:center; gap:14px; margin-top:24px; padding-top:18px; border-top:1px solid var(--border-subtle)}
@@ -169,7 +199,7 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 
 <script>
 const qs = new URLSearchParams(location.search);
-let state = { opt: qs.get('opt')||'A', estado: qs.get('estado')||'ok', sem: qs.get('sem')||'yellow' };
+let state = { opt: qs.get('opt')||'B', estado: qs.get('estado')||'ok', sem: qs.get('sem')||'yellow' };
 
 // SEM = número-norte + tendência por semáforo (1 régua por estado)
 const SEM = {
@@ -181,19 +211,19 @@ const SEM = {
 // pct = preenchimento da barrinha (Opção C). dot = cor da régua da alavanca.
 const LEVERS = {
   green: [
-    {dot:'var(--green)',  num:'14h', pct:82, sig:'TTV',      full:'Tempo Até o Valor'},
-    {dot:'var(--green)',  num:'78%', pct:78, sig:'Setup-D7', full:'Configuração concluída em 7 dias'},
-    {dot:'var(--yellow)', num:'61%', pct:61, sig:'OCR-D14',  full:'Retorno de uso até o dia 14'},
+    {dot:'var(--green)',  num:'14h', pct:82, sig:'TTV',      full:'Tempo Até o Valor',              pol:'lower',  trend:-8.6},
+    {dot:'var(--green)',  num:'78%', pct:78, sig:'Setup-D7', full:'Configuração concluída em 7 dias', pol:'higher', trend:+5.2},
+    {dot:'var(--yellow)', num:'61%', pct:61, sig:'OCR-D14',  full:'Retorno de uso até o dia 14',      pol:'higher', trend:-3.4},
   ],
   yellow: [
-    {dot:'var(--red)',    num:'61h', pct:38, sig:'TTV',      full:'Tempo Até o Valor'},
-    {dot:'var(--red)',    num:'44%', pct:44, sig:'Setup-D7', full:'Configuração concluída em 7 dias'},
-    {dot:'var(--yellow)', num:'31%', pct:31, sig:'OCR-D14',  full:'Retorno de uso até o dia 14'},
+    {dot:'var(--red)',    num:'61h', pct:38, sig:'TTV',      full:'Tempo Até o Valor',              pol:'lower',  trend:+11.2},
+    {dot:'var(--red)',    num:'44%', pct:44, sig:'Setup-D7', full:'Configuração concluída em 7 dias', pol:'higher', trend:-0.6},
+    {dot:'var(--yellow)', num:'31%', pct:31, sig:'OCR-D14',  full:'Retorno de uso até o dia 14',      pol:'higher', trend:+2.1},
   ],
   red: [
-    {dot:'var(--red)',    num:'74h', pct:24, sig:'TTV',      full:'Tempo Até o Valor'},
-    {dot:'var(--red)',    num:'33%', pct:33, sig:'Setup-D7', full:'Configuração concluída em 7 dias'},
-    {dot:'var(--red)',    num:'22%', pct:22, sig:'OCR-D14',  full:'Retorno de uso até o dia 14'},
+    {dot:'var(--red)',    num:'74h', pct:24, sig:'TTV',      full:'Tempo Até o Valor',              pol:'lower',  trend:+9.4},
+    {dot:'var(--red)',    num:'33%', pct:33, sig:'Setup-D7', full:'Configuração concluída em 7 dias', pol:'higher', trend:-7.8},
+    {dot:'var(--red)',    num:'22%', pct:22, sig:'OCR-D14',  full:'Retorno de uso até o dia 14',      pol:'higher', trend:-4.2},
   ],
 };
 
@@ -216,19 +246,68 @@ function metaBar(val){
   </div>`;
 }
 
+// GHOST-R = guardrail de integridade ("o número é real?"). Taxa de Sumiço 18% => 82% de confiança.
+// Régua própria (NÃO a régua das alavancas): confiável / atenção / não-confiável.
+const GHOSTR = { sumico:18, conf:82, leitura:'confiável' };
+function ghostReg(conf){
+  if(conf>=70) return {col:'var(--green)',  word:'confiável'};
+  if(conf>=45) return {col:'var(--yellow)', word:'atenção'};
+  return {col:'var(--red)', word:'não-confiável'};
+}
+function shieldSVG(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>`;
+}
+// 1ª LINHA FIXA — 3 visualizações do guardrail (toggle GHOST-R A/B/C muda SÓ esta linha)
+function guardrailLine(){
+  const r = ghostReg(GHOSTR.conf);
+  const name = `<div class="gr-id"><span class="gr-tag">Guardrail de integridade</span><span class="gr-name"><b>GHOST-R</b> — Taxa de Sumiço</span></div>`;
+  let viz='';
+  if(state.opt==='A'){
+    // A — selo: escudo + leitura "18% · confiável"
+    viz = `<span class="gr-read" style="color:${r.col}"><span class="gr-pct">${GHOSTR.sumico}%</span> · ${r.word}</span>`;
+  } else if(state.opt==='B'){
+    // B — mini-medidor / anel de confiança
+    viz = `<span class="gr-ring" style="--gr-conf:${GHOSTR.conf}; background:conic-gradient(${r.col} ${GHOSTR.conf}%, var(--bg-elevated) 0)"><span style="color:${r.col}">${GHOSTR.sumico}%</span></span>`;
+  } else {
+    // C — medidor de PIPS (5 segmentos discretos · escada de força de sinal) + leitura. Distinto da barra das alavancas.
+    const lit = Math.round(GHOSTR.conf/20); // 0..5 acendem conforme confiança
+    let pips=''; for(let i=1;i<=5;i++){ pips += `<i class="${i<=lit?'on':''}" style="${i<=lit?`background:${r.col}`:''}"></i>`; }
+    viz = `<span class="gr-pips">${pips}</span><span class="gr-read" style="color:${r.col}"><span class="gr-pct">${GHOSTR.sumico}%</span></span>`;
+  }
+  const icol = state.opt==='A' ? `color:${r.col};background:color-mix(in srgb,${r.col} 13%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,${r.col} 30%,transparent)` : '';
+  return `<div class="guardrail"><span class="gr-icon" style="${icol}">${shieldSVG()}</span>${name}${viz}</div>`;
+}
+// TENDÊNCIA da alavanca vs período anterior (modelo DS §6.1 R1/R2/R6 + §6.3 TrendBadge).
+// R1: UM lugar só (junto do valor). R6: cor = POLARIDADE (melhorou/piorou), não a direção crua.
+// R2: |delta| < 1% => estável, seta lateral "→ 0,X%", pill neutra/amarela (sem ↑↓).
+function leverTrend(l){
+  if(l.trend==null) return '';
+  const v = l.trend, mag = Math.abs(v);
+  const fmt = mag.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
+  if(mag < 1){ // estável (R2) — fora dos 2 itens com movimento real: não renderiza tendência
+    return '';
+  }
+  const up = v > 0;                               // direção crua do número
+  // polaridade (R6): 'lower' = menor é melhor (TTV) · 'higher' = maior é melhor (Setup-D7/OCR-D14)
+  const melhorou = l.pol==='lower' ? !up : up;
+  const arrow = up ? '▲' : '▼';
+  const arColor = melhorou ? 'var(--green)' : 'var(--red)'; // SÓ A SETA carrega a cor da POLARIDADE; o número fica neutro
+  return `<span class="ltrend"><span class="lt-ar" style="color:${arColor}">${arrow}</span>${fmt}%</span>`;
+}
 function levers(){
-  // lista vertical · SIGLA — nome completo · barrinha (cor do estado da régua) · valor — modelo da Opção C aplicado a todas
+  // lista vertical · SIGLA — nome completo · barrinha (cor do estado da régua) · valor · tendência (R1, um lugar só)
   const rows = LEVERS[state.sem].map(l=>`<div class="lever">
       <span class="ldot" style="background:${l.dot}"></span>
       <span class="lname"><b>${l.sig}</b> — ${l.full}</span>
       <span class="lbar"><i style="width:${l.pct}%;background:${l.dot}"></i></span>
       <span class="lnum">${l.num}</span>
+      ${leverTrend(l)}
     </div>`).join('');
-  return `<div class="prelabel">Pré análise</div><div class="levers">${rows}</div>`;
+  return `<div class="prelabel">Alavancas e Bloqueios</div><div class="levers">${guardrailLine()}${rows}</div>`;
 }
 
 function ecg(col, key){
-  const path = "M0 14 H210 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H292";
+  const path = "M0 14 H48 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H292";
   return `<div class="ecg ${key}" style="--ecg:${col}">
     <span class="line"><svg viewBox="0 0 300 28" preserveAspectRatio="none">
       <path class="base" d="${path}"/>
@@ -239,19 +318,12 @@ function ecg(col, key){
   </div>`;
 }
 
-function ghostChip(extra){
-  return `<span class="ghost ${extra||''}"><span class="gdot"></span>GHOST-R 18% · confiável</span>`;
-}
 function topRow(){
-  const showHere = state.estado==='ok';
-  const titleGhost = (state.opt==='C' && showHere) ? ghostChip('gtitle') : '';
-  const topGhost   = (state.opt==='B' && showHere) ? `<div class="ghosttop">${ghostChip('gtop')}</div>` : '';
   return `<div class="top">
     <span class="avatar"><img src="${AV}" alt="Henrique Matos"></span>
     <div class="id">
-      <span class="nmrow"><span class="nm">CR6 · Taxa de Primeiro Impacto</span>${titleGhost}</span>
-      <span class="sub">% de cadastros que exportaram o 1º carrossel em ≤7 dias</span>
-      ${topGhost}
+      <span class="nmrow"><span class="nm">CR6 · Taxa de Primeiro Impacto</span></span>
+      <span class="sub">% de cadastros que ativam</span>
     </div>
     ${trendBadge()}
   </div>`;
@@ -261,19 +333,18 @@ function heroHTML(){
   const s = SEM[state.sem];
 
   if(state.estado==='await'){
-    return `<div class="hero">${topRow()}
+    return `<div class="hero" style="border-left-color:${s.col}">${topRow()}
       <div class="await"><span class="badge">⏳ Aguardando janela de 7 dias fechar</span></div>
       ${ecg(s.col, state.sem)}
     </div>`;
   }
 
-  const ghost = state.opt==='A' ? ghostChip() : '';
   const fragChip = state.estado==='frag' ? `<div class="frag-chip">▢ Amostra pequena · n=14</div>` : '';
   const numColor = state.estado==='frag' ? 'color:var(--fg-muted)' : '';
 
-  return `<div class="hero">${topRow()}
+  return `<div class="hero" style="border-left-color:${s.col}">${topRow()}
     <div class="mid">
-      <div class="numwrap"><div class="bignum" style="${numColor}">${s.val}%</div>${ghost}</div>
+      <div class="numwrap"><div class="bignum" style="${numColor}">${s.val}%</div></div>
       <div class="rcol">${metaBar(s.val)}</div>
     </div>
     ${fragChip}
