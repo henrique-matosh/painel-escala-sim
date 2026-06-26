@@ -61,8 +61,8 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 
 /* ── 1. LINHA DE TOPO: avatar + NOME DA MÉTRICA grande + chip tendência à direita ── */
 .top{display:flex; align-items:flex-start; gap:14px}
-.avatar{flex:none; width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#3a6, #284); display:grid; place-items:center; overflow:hidden; box-shadow:0 0 0 1px var(--overlay-sm)}
-.avatar svg{width:42px; height:42px}
+.avatar{flex:none; width:42px; height:42px; border-radius:50%; overflow:hidden; background:var(--bg-elevated); border:2px solid var(--border-hover)}
+.avatar img{width:100%; height:100%; object-fit:cover; display:block}
 .id{min-width:0; display:flex; flex-direction:column; gap:3px; flex:1}
 .id .kicker{display:inline-flex; align-self:flex-start; align-items:center; font-family:var(--font-mono); font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--mod-ati); background:var(--mod-ati-bg); border:1px solid color-mix(in srgb,var(--mod-ati) 28%,transparent); border-radius:6px; padding:2px 8px; margin-bottom:2px}
 .id .nm{font-size:26px; font-weight:800; letter-spacing:-.015em; color:var(--fg); line-height:1.08}
@@ -80,15 +80,20 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 /* 3. GHOST-R chip discreto — embaixo do número/à esquerda (onde o print põe) */
 .ghost{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; border-radius:99px; padding:4px 11px; border:1px solid color-mix(in srgb,var(--green) 32%,transparent); color:var(--green); background:var(--green-bg)}
 .ghost .gdot{width:6px; height:6px; border-radius:50%; background:currentColor}
+/* GHOST-R · 3 placements (toggle GHOST-R A/B/C muda SÓ isto) */
+/* A — chip abaixo do número (default) */
+/* B — selo no topo-direito, junto do trend */
+.ghost.gtop{font-size:10.5px; padding:3px 9px}
+.id .ghosttop{display:flex; align-items:center; gap:8px; margin-top:6px}
+/* C — selo discreto ao lado do título */
+.ghost.gtitle{font-size:10px; font-weight:700; letter-spacing:.02em; padding:2px 8px; border-radius:6px; opacity:.92}
+.nmrow{display:flex; align-items:center; gap:9px; flex-wrap:wrap}
 .rcol{flex:1; min-width:0; display:flex; flex-direction:column; gap:0}
 .metabar{position:relative; height:16px; border-radius:99px; background:linear-gradient(90deg,var(--red) 0%,var(--red) 25%,var(--yellow) 25%,var(--yellow) 40%,var(--green) 40%,var(--green) 100%); box-shadow:inset 0 0 0 1px var(--overlay-sm)}
 .metabar .tick{position:absolute; top:-2px; bottom:-2px; width:1.5px; background:var(--bg-surface); opacity:.7}
 .markerwrap{position:absolute; top:50%; transform:translate(-50%,-50%); z-index:3}
-.marker{display:block; width:24px; height:24px; border-radius:50%; background:var(--fg); box-shadow:0 0 0 3px var(--bg-surface), 0 0 12px color-mix(in srgb,var(--mod-ati) 60%,transparent)}
-.metabar-scale{position:relative; height:13px; margin-top:8px; font-size:9.5px; color:var(--fg-subtle)}
-.metabar-scale span{position:absolute; transform:translateX(-50%); white-space:nowrap}
-.metabar-scale span.l0{left:0; transform:none} .metabar-scale span.l100{left:auto; right:0; transform:none}
-.metabar-scale .meta{color:var(--fg-body); font-weight:600}
+.marker{position:relative; display:block; width:25px; height:25px; border-radius:50%; overflow:hidden; background:var(--fg); box-shadow:0 0 0 3px var(--bg-surface), 0 0 12px color-mix(in srgb,var(--mod-ati) 60%,transparent)}
+.marker svg{position:absolute; inset:0; width:100%; height:100%}
 
 /* ── 4. LABEL "Pré análise" (âmbar, destaque) ── */
 .prelabel{display:flex; align-items:center; gap:10px; font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--amber); margin:26px 0 0}
@@ -99,10 +104,12 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 .lever{display:flex; align-items:center; gap:12px; padding:13px 16px}
 .lever + .lever{border-top:1px solid var(--border-subtle)}
 .lever .ldot{flex:none; width:9px; height:9px; border-radius:50%}
-.lever .lname{flex:1; min-width:0; font-size:13.5px; color:var(--fg-body); line-height:1.3}
+.lever .lname{flex:1 1 auto; min-width:0; font-size:13.5px; color:var(--fg-body); line-height:1.3}
 .lever .lname b{color:var(--fg); font-weight:700}
-.lever .ldots{flex:none; height:1px; align-self:center; flex:1; min-width:18px; border-bottom:1px dotted var(--border-hover); margin:0 4px}
-.lever .lnum{flex:none; font-family:var(--font-mono); font-size:18px; font-weight:700; color:var(--fg); line-height:1}
+/* barrinha de progresso da alavanca (modelo Opção C) — track + fill */
+.lever .lbar{flex:none; position:relative; display:block; width:120px; height:7px; border-radius:99px; overflow:hidden; background:var(--bg-elevated); box-shadow:inset 0 0 0 1px var(--overlay-sm)}
+.lever .lbar i{display:block; height:100%; border-radius:99px; min-width:6px; transition:width .35s ease}
+.lever .lnum{flex:none; min-width:46px; text-align:right; font-family:var(--font-mono); font-size:18px; font-weight:700; color:var(--fg); line-height:1}
 .lever .lring{flex:none; width:13px; height:13px; border-radius:50%; box-shadow:0 0 0 1px var(--overlay-sm)}
 
 /* ── 6. ECG na cor do semáforo + Diagnosticar (EM BREVE) ── */
@@ -110,10 +117,11 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 .ecg .line{flex:1; min-width:0; height:30px}
 .ecg .line svg{width:100%; height:30px; display:block; overflow:visible}
 .ecg .base{stroke:var(--ecg); opacity:.45; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.ecg .arr{stroke:var(--ecg); opacity:.5; fill:none; stroke-width:2.2; stroke-linecap:round}
 .ecg .sweep{stroke:var(--ecg); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:18 300; animation:ecg-sweep 3.4s linear infinite; filter:drop-shadow(0 0 3px var(--ecg))}
 .ecg.red .sweep{animation-duration:2.0s}
-.ecg .txt{flex:none; display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--ecg)}
-.ecg .txt .soon{font-size:8px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--soon); background:var(--soon-bg); border:1px solid color-mix(in srgb,var(--soon) 26%,transparent); border-radius:99px; padding:2px 6px; white-space:nowrap}
+.ecg .txt{flex:none; position:relative; display:flex; align-items:center; font-size:14px; font-weight:700; letter-spacing:.01em; color:var(--ecg)}
+.ecg .txt .soon{position:absolute; top:calc(100% + 4px); left:50%; transform:translateX(-50%); font-size:8px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--soon); background:var(--soon-bg); border:1px solid color-mix(in srgb,var(--soon) 26%,transparent); border-radius:99px; padding:1.5px 6px; white-space:nowrap}
 @keyframes ecg-sweep{ from{stroke-dashoffset:318} to{stroke-dashoffset:0} }
 @media (prefers-reduced-motion:reduce){ .ecg .sweep{animation:none} .trendbadge.shake{animation:none} }
 
@@ -123,46 +131,9 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 /* Estado: Amostra pequena */
 .frag-chip{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--fg-muted); background:var(--surface-2); border:1px solid var(--border-hover); border-radius:99px; padding:4px 11px; margin-top:8px; align-self:flex-start}
 
-/* ════════════ OPÇÃO A — REFERÊNCIA DO CEO, FIEL (lista vertical · nome grande · sem tag inventada) ════════════ */
-/* nome da métrica GRANDE (sem prefixo de sigla — é o jeito do CEO, só polido) */
-[data-opt="A"] .id .nm{font-size:34px; font-weight:800; letter-spacing:-.02em; line-height:1.04}
-[data-opt="A"] .id .sub{font-size:13px; margin-top:1px}
-/* alavancas: lista vertical limpa, NOME COMPLETO em destaque, valor à direita */
-[data-opt="A"] .lever{padding:15px 18px}
-[data-opt="A"] .lever .lname{font-size:16px; font-weight:600; color:var(--fg)}
-[data-opt="A"] .lever .lsig{display:inline-block; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--mod-ati); background:var(--mod-ati-bg); border:1px solid color-mix(in srgb,var(--mod-ati) 26%,transparent); border-radius:5px; padding:1px 6px; margin-right:8px; letter-spacing:0}
-[data-opt="A"] .lever .lnum{font-size:21px; font-weight:700}
-
-/* ════════════ OPÇÃO B — DS-driven (tokens ciano Ativação, card "barra-meta" + lista) ════════════ */
-[data-opt="B"] .hero{border-left-width:0; padding-top:0}
-[data-opt="B"] .hero::before{content:""; position:absolute; left:0; top:0; right:0; height:4px; border-radius:14px 14px 0 0; background:linear-gradient(90deg,var(--mod-ati),color-mix(in srgb,var(--mod-ati) 30%,transparent))}
-[data-opt="B"] .hero{padding:24px 26px}
-[data-opt="B"] .top{padding-top:4px}
-[data-opt="B"] .id .nm{font-size:24px}
-[data-opt="B"] .avatar{border-radius:11px; width:40px; height:40px}
-[data-opt="B"] .avatar svg{width:40px; height:40px}
-/* Opção B: número e barra empilhados num "bloco de métrica" do DS */
-[data-opt="B"] .bignum{font-size:84px; color:var(--mod-ati)}
-[data-opt="B"] .marker{box-shadow:0 0 0 3px var(--bg-surface), 0 0 14px color-mix(in srgb,var(--mod-ati) 75%,transparent); background:var(--mod-ati)}
-[data-opt="B"] .levers{background:transparent; border:0; border-radius:0}
-[data-opt="B"] .lever{border:1px solid var(--border-subtle); border-radius:10px; margin-top:8px; padding:12px 15px; background:var(--surface-2)}
-[data-opt="B"] .lever + .lever{border-top:1px solid var(--border-subtle)}
-[data-opt="B"] .prelabel{color:var(--mod-ati)}
-[data-opt="B"] .prelabel::after{background:color-mix(in srgb,var(--mod-ati) 24%,transparent)}
-[data-opt="B"] .ghost{border-color:var(--border-hover); color:var(--fg-muted); background:var(--surface-2)}
-[data-opt="B"] .ghost .gdot{background:var(--green)}
-
-/* ════════════ OPÇÃO C — inovação livre (número-norte + lista com barrinhas de progresso) ════════════ */
-[data-opt="C"] .hero{border-left:3px solid var(--mod-ati); background:linear-gradient(180deg, color-mix(in srgb,var(--mod-ati) 6%,var(--bg-surface)), var(--bg-surface) 40%)}
-[data-opt="C"] .mid{flex-direction:column; align-items:stretch; gap:16px}
-[data-opt="C"] .numwrap{flex-direction:row; align-items:flex-end; gap:14px}
-[data-opt="C"] .bignum{font-size:88px}
-[data-opt="C"] .rcol{width:100%}
-[data-opt="C"] .lever .lbar{flex:none; width:120px; height:7px; border-radius:99px; background:var(--border-subtle); overflow:hidden; position:relative}
-[data-opt="C"] .lever .lbar i{position:absolute; left:0; top:0; bottom:0; border-radius:99px}
-[data-opt="C"] .levers{background:transparent; border:0}
-[data-opt="C"] .lever{padding:12px 4px}
-[data-opt="C"] .lever .lring{display:none}
+/* ════════════ LOOK ÚNICO (toggle GHOST-R não muda estrutura — só o placement do GHOST-R) ════════════ */
+.id .nm{font-size:34px; font-weight:800; letter-spacing:-.02em; line-height:1.04}
+.id .sub{font-size:13px; margin-top:1px}
 
 /* DOCK — barra de controle flutuante (1 link, ao vivo) */
 .dock{position:fixed; left:50%; transform:translateX(-50%); bottom:14px; z-index:80; display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; background:var(--bg); border:1px solid var(--border-hover); border-radius:18px; padding:8px 10px; box-shadow:0 10px 30px rgba(0,0,0,.28); max-width:calc(100vw - 20px)}
@@ -171,6 +142,7 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 .dock .seg button[aria-pressed="true"]{background:var(--bg); color:var(--fg); box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .dock .tag{font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--fg-subtle); padding-left:4px}
 
+@media (max-width:560px){ .hero{padding:18px 16px} .lever{gap:9px; padding:12px 13px} .lever .lbar{width:66px} .lever .lnum{font-size:16px; min-width:42px} }
 @media (min-width:720px){ .wrap{padding:20px} }
 </style>
 </head>
@@ -187,7 +159,7 @@ body{background:var(--bg-base); color:var(--fg-body); font-family:system-ui,-app
 </div>
 
 <div class="dock">
-  <div class="seg" id="optSeg"><span class="tag">Opção</span>
+  <div class="seg" id="optSeg"><span class="tag">GHOST-R</span>
     <button data-opt="A" aria-pressed="true">A</button><button data-opt="B">B</button><button data-opt="C">C</button></div>
   <div class="seg" id="estadoSeg"><span class="tag">Estado</span>
     <button data-estado="ok" aria-pressed="true">OK</button><button data-estado="await">Aguardando</button><button data-estado="frag">Amostra peq.</button></div>
@@ -225,8 +197,9 @@ const LEVERS = {
   ],
 };
 
-// avatar genérico (zero-reveal): silhueta neutra
-const AVATAR = '<svg viewBox="0 0 42 42"><rect width="42" height="42" fill="#2e6f55"/><circle cx="21" cy="16" r="7" fill="#cfe9dd"/><path d="M7 40c1-9 7-13 14-13s13 4 14 13z" fill="#cfe9dd"/></svg>';
+// avatar = foto aprovada (mesma img base64 da referência)
+const AV = "data:image/jpeg;base64,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";
+const uptideMark = () => `<svg viewBox="0 0 974 974" preserveAspectRatio="xMidYMid slice"><path d="M-59 679.5C428 352.5 365.5 1356.5 1070 149.5" fill="none" stroke="var(--bg-surface)" stroke-width="150"/></svg>`;
 
 function trendBadge(){
   if(state.estado!=='ok') return '';
@@ -237,66 +210,48 @@ function trendBadge(){
 }
 
 function metaBar(val){
-  const pmf=40, mkt=90;
-  return `<div>
-    <div class="metabar">
-      <span class="tick" style="left:25%"></span><span class="tick" style="left:40%"></span>
-      <span class="markerwrap" style="left:${val}%"><span class="marker"></span></span>
-    </div>
-    <div class="metabar-scale">
-      <span class="l0">0</span>
-      <span class="meta" style="left:${pmf}%">PMF ${pmf}</span>
-      <span class="meta" style="left:${mkt}%">meta ${mkt}</span>
-      <span class="l100">100</span>
-    </div>
+  return `<div class="metabar">
+    <span class="tick" style="left:25%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:60%"></span>
+    <span class="markerwrap" style="left:${val}%"><span class="marker">${uptideMark()}</span></span>
   </div>`;
 }
 
 function levers(){
-  const rows = LEVERS[state.sem].map(l=>{
-    if(state.opt==='A'){
-      // FIEL à referência do CEO: lista vertical, valor à direita, sem anel/leader. SIGLA + NOME COMPLETO em cada alavanca.
-      return `<div class="lever">
-        <span class="ldot" style="background:${l.dot}"></span>
-        <span class="lname"><b>${l.sig}</b> — ${l.full}</span>
-        <span class="lnum">${l.num}</span>
-      </div>`;
-    }
-    if(state.opt==='C'){
-      return `<div class="lever">
-        <span class="ldot" style="background:${l.dot}"></span>
-        <span class="lname"><b>${l.sig}</b> — ${l.full}</span>
-        <span class="lbar"><i style="width:${l.pct}%;background:${l.dot}"></i></span>
-        <span class="lnum">${l.num}</span>
-      </div>`;
-    }
-    return `<div class="lever">
+  // lista vertical · SIGLA — nome completo · barrinha (cor do estado da régua) · valor — modelo da Opção C aplicado a todas
+  const rows = LEVERS[state.sem].map(l=>`<div class="lever">
       <span class="ldot" style="background:${l.dot}"></span>
       <span class="lname"><b>${l.sig}</b> — ${l.full}</span>
-      <span class="ldots"></span>
+      <span class="lbar"><i style="width:${l.pct}%;background:${l.dot}"></i></span>
       <span class="lnum">${l.num}</span>
-      <span class="lring" style="background:${l.dot}"></span>
-    </div>`;
-  }).join('');
+    </div>`).join('');
   return `<div class="prelabel">Pré análise</div><div class="levers">${rows}</div>`;
 }
 
 function ecg(col, key){
+  const path = "M0 14 H210 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H292";
   return `<div class="ecg ${key}" style="--ecg:${col}">
     <span class="line"><svg viewBox="0 0 300 28" preserveAspectRatio="none">
-      <path class="base" d="M0 14 H70 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H300"/>
-      <path class="sweep" d="M0 14 H70 l6 -9 l8 18 l7 -22 l9 22 l6 -9 H300"/>
+      <path class="base" d="${path}"/>
+      <path class="sweep" d="${path}"/>
+      <path class="arr" d="M292 14 l-9 -5 M292 14 l-9 5" vector-effect="non-scaling-stroke"/>
     </svg></span>
     <span class="txt"><span>Diagnosticar</span><span class="soon">em breve</span></span>
   </div>`;
 }
 
+function ghostChip(extra){
+  return `<span class="ghost ${extra||''}"><span class="gdot"></span>GHOST-R 18% · confiável</span>`;
+}
 function topRow(){
+  const showHere = state.estado==='ok';
+  const titleGhost = (state.opt==='C' && showHere) ? ghostChip('gtitle') : '';
+  const topGhost   = (state.opt==='B' && showHere) ? `<div class="ghosttop">${ghostChip('gtop')}</div>` : '';
   return `<div class="top">
-    <span class="avatar">${AVATAR}</span>
+    <span class="avatar"><img src="${AV}" alt="Henrique Matos"></span>
     <div class="id">
-      <span class="nm">CR6 · Taxa de Primeiro Impacto</span>
+      <span class="nmrow"><span class="nm">CR6 · Taxa de Primeiro Impacto</span>${titleGhost}</span>
       <span class="sub">% de cadastros que exportaram o 1º carrossel em ≤7 dias</span>
+      ${topGhost}
     </div>
     ${trendBadge()}
   </div>`;
@@ -312,7 +267,7 @@ function heroHTML(){
     </div>`;
   }
 
-  const ghost = `<span class="ghost"><span class="gdot"></span>GHOST-R 18% · confiável</span>`;
+  const ghost = state.opt==='A' ? ghostChip() : '';
   const fragChip = state.estado==='frag' ? `<div class="frag-chip">▢ Amostra pequena · n=14</div>` : '';
   const numColor = state.estado==='frag' ? 'color:var(--fg-muted)' : '';
 
